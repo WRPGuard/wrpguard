@@ -3,6 +3,7 @@
 WRPGuard is licensed under the PolyForm Noncommercial License 1.0.0, and Vynx Labs LLC offers separate commercial licenses. Merging outside code requires a contributor agreement that lets Vynx Labs LLC offer it under both. That agreement does not exist yet, so **pull requests from outside contributors cannot be merged for now**. Issues with synthetic reproductions are welcome; suspected vulnerabilities go through `SECURITY.md`.
 
 ## Ground rules
+- Follow the [code of conduct](CODE_OF_CONDUCT.md).
 - Open a focused issue or PR with a **synthetic** reproduction. Never include real credentials, registration certificates, keys, tokens or personal data.
 - Every matching behavior must link to an OpenID4VP clause, or be labeled explicitly as WRPGuard policy in `docs/adr/ADR-002-standards-traceability.md`.
 - A change that can turn a previous `fail`/`indeterminate` into `pass` needs a new policy version and an ADR-002 entry.

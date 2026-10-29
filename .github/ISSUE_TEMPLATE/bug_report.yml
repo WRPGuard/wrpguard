@@ -1,0 +1,28 @@
+name: Bug report
+description: Wrong result, crash or documentation error (not a security issue)
+body:
+  - type: markdown
+    attributes:
+      value: Use **synthetic data only**. Never paste real credentials, keys, tokens, registration certificates or personal data. A false `pass` is a security issue; report it privately instead.
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: Output of `wrpguard --version`, or the package version.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction
+      description: The scope declaration, the DCQL query, and the exact command or API call.
+      render: shell
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected and actual result
+      description: Decision, findings or exit code you expected, what you got, and the OpenID4VP clause or ADR-002 rule involved if known.
+    validations:
+      required: true

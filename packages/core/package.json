@@ -1,7 +1,6 @@
 {
   "name": "@wrpguard/core",
   "version": "0.1.0-rc.0",
-  "private": true,
   "description": "Experimental offline preflight: checks whether an OpenID4VP 1.0 DCQL query fits a caller-supplied, unverified scope declaration. Not a certificate validator or EUDI conformance tool.",
   "license": "PolyForm-Noncommercial-1.0.0",
   "author": "Vynx Labs LLC",
@@ -40,5 +39,9 @@
   ],
   "scripts": {
     "build": "node ../../scripts/clean.mjs dist && tsc -p tsconfig.build.json"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
   }
 }

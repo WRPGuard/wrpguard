@@ -5,7 +5,7 @@ import { join, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = fileURLToPath(new URL('..', import.meta.url));
-const skipDirs = new Set(['node_modules', 'dist', '.git', 'coverage']);
+const skipDirs = new Set(['node_modules', 'dist', '.git', 'coverage', 'release']);
 const skipFiles = new Set(['pnpm-lock.yaml']);
 
 // Patterns are assembled from parts so this file does not match itself.

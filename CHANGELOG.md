@@ -8,5 +8,6 @@ First implementation of the planning kit v1.2. Not published. Licensed under Pol
 - Supported formats: `dc+sd-jwt`, `mso_mdoc`. Superset evaluation of `claim_sets` and `credential_sets`.
 - Strict bounded JSON parser (duplicate keys rejected), terminal-safe output, no runtime dependencies.
 - ADR-001 (API), ADR-002 (standards traceability), ADR-003 (input security).
+- Release tooling: manual `release` workflow (dry run by default, npm provenance), `scripts/pack-release.mjs` (tarball install check, CycloneDX SBOM, SHA256SUMS), Dependabot, issue forms, code of conduct.
 
 Known limitations: `docs/RELEASE_NOTES_v0.1.0-rc.0.md`.

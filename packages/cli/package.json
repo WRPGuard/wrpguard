@@ -1,7 +1,6 @@
 {
   "name": "@wrpguard/cli",
   "version": "0.1.0-rc.0",
-  "private": true,
   "description": "Experimental local CLI for WRPGuard: offline preflight of an OpenID4VP 1.0 DCQL query against a caller-supplied scope declaration.",
   "license": "PolyForm-Noncommercial-1.0.0",
   "author": "Vynx Labs LLC",
@@ -37,5 +36,9 @@
   },
   "scripts": {
     "build": "node ../../scripts/clean.mjs dist && tsc -p tsconfig.build.json"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
   }
 }
