@@ -6,6 +6,11 @@ Requirements learned on the first release (2026-10-28):
 - npm accepts provenance only from **public** source repositories.
 - `repository.url` in each `package.json` must match the GitHub repository's exact casing (`WRPGuard/wrpguard`).
 - `npm publish` with a granular token fails with `EOTP` when the account requires 2FA; `npm stage publish` (npm >= 11.15) works with the same token and defers 2FA to approval.
+- Staging a package that does not exist yet creates a public placeholder `0.0.0-stage` and points `latest` at it, so after approving a **new** package, move `latest` and deprecate the placeholder (needs 2FA):
+  ```sh
+  npm dist-tag add @wrpguard/<name>@<version> latest
+  npm deprecate @wrpguard/<name>@0.0.0-stage "Placeholder from npm staged publishing; use @wrpguard/<name>@latest"
+  ```
 
 Publishing is an owner decision (`docs/OWNER_APPROVAL_GATES.md`). Agents may run dry runs only.
 
