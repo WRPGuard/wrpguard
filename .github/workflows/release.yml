@@ -1,11 +1,20 @@
-# Manual release: checks, packs and verifies @wrpguard/core and @wrpguard/cli, then publishes them
-# to npm with provenance through trusted publishing (OIDC, no token, no 2FA prompt). With
-# stage=true it uses `npm stage publish` instead, and a maintainer approves each package with 2FA.
-# Starts only by hand (Actions tab or `gh workflow run`), and is a dry run unless dry_run is set
-# to false. See docs/RELEASING.md.
+# Publishes @wrpguard/core and @wrpguard/cli to npm with provenance through trusted publishing
+# (OIDC: no token, no 2FA prompt). See docs/RELEASING.md.
+#
+# Automatic: a push to main releases the current package version when its CHANGELOG heading is
+# dated ("## 1.2.3 (YYYY-MM-DD)") and that version is not on npm yet. While the heading says
+# "(unreleased)", pushes never publish.
+# Manual: Actions tab or `gh workflow run release.yml`; a dry run unless dry_run=false, and
+# stage=true stages instead (a maintainer approves each package with 2FA on npmjs.com).
 name: release
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - CHANGELOG.md
+      - packages/core/package.json
+      - packages/cli/package.json
   workflow_dispatch:
     inputs:
       dry_run:
@@ -20,13 +29,37 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: release
+  cancel-in-progress: false
+
 jobs:
+  plan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      run: ${{ steps.plan.outputs.run }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Decide whether to release
+        id: plan
+        env:
+          EVENT: ${{ github.event_name }}
+          DRY_RUN: ${{ inputs.dry_run }}
+        run: node scripts/release-plan.mjs
+
   release:
+    needs: plan
+    if: needs.plan.outputs.run == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 20
     permissions:
       contents: read
       id-token: write # npm provenance and trusted publishing
+    outputs:
+      published: ${{ steps.publish.outputs.published }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -50,6 +83,7 @@ jobs:
             release/SHA256SUMS
           if-no-files-found: error
       - name: Publish to npm
+        id: publish
         env:
           DRY_RUN: ${{ inputs.dry_run }}
           STAGE: ${{ inputs.stage }}
@@ -71,12 +105,15 @@ jobs:
           for name in core cli; do
             "${publish[@]}" "./release/wrpguard-$name-$version.tgz" "${flags[@]}"
           done
+          if [ "$DRY_RUN" != "true" ] && [ "$STAGE" != "true" ]; then
+            echo "published=true" >> "$GITHUB_OUTPUT"
+          fi
 
-  # After a real (not dry-run, not staged) publish: tag the commit and attach the published
+  # After a real publish (not a dry run, not staged): tag the commit and attach the published
   # tarballs, SBOM and checksums to a GitHub release. Release notes come from CHANGELOG.md.
   github-release:
     needs: release
-    if: ${{ !inputs.dry_run && !inputs.stage }}
+    if: needs.release.outputs.published == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:

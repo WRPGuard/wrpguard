@@ -7,7 +7,7 @@ No change to evaluation semantics (`wrpguard.policy/0.1`), the report format (`w
 - API reference: `docs/API.md`, with a test that every export is documented.
 - Runnable relying-party integration: `examples/basic`, checked by `pnpm smoke`.
 - README: install and usage from npm.
-- Release workflow: trusted publishing (OIDC) by default, optional staged publishing, automatic dist-tag choice, and a GitHub release with the tarballs, SBOM and checksums.
+- Release workflow: publishes automatically on push when the CHANGELOG heading for the version is dated; trusted publishing (OIDC), optional staged publishing, automatic dist-tag choice, and a GitHub release with the tarballs, SBOM and checksums.
 
 ## 0.1.0-rc.0 (2026-10-28)
 First release candidate. Licensed under PolyForm Noncommercial 1.0.0 (source-available); commercial use requires a license from Vynx Labs LLC.
