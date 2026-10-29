@@ -1,6 +1,6 @@
 # WRPGuard
 
-**Experimental · [`@wrpguard/core`](https://www.npmjs.com/package/@wrpguard/core) and [`@wrpguard/cli`](https://www.npmjs.com/package/@wrpguard/cli) 0.1.0-rc.0 on npm · source-available ([PolyForm Noncommercial 1.0.0](LICENSE.md))**
+**Experimental · [`@wrpguard/core`](https://www.npmjs.com/package/@wrpguard/core) and [`@wrpguard/cli`](https://www.npmjs.com/package/@wrpguard/cli) on npm (0.1 release candidates) · source-available ([PolyForm Noncommercial 1.0.0](LICENSE.md))**
 
 WRPGuard is an **offline preflight**. It checks whether a proposed [OpenID4VP 1.0](https://openid.net/specs/openid-4-verifiable-presentations-1_0-final.html) DCQL query asks only for the credential types and claim paths in a **scope declaration you supply**, for the service and intended use you name. It flags over-requests before the request reaches a wallet.
 
@@ -74,7 +74,7 @@ WRPGuard is **source-available, not open source**. Copyright 2026 Vynx Labs LLC,
 This summary is not legal advice and does not change the license; [`LICENSE.md`](LICENSE.md) governs.
 
 ## Project status and governance
-- Status: experimental release candidate `0.1.0-rc.0`, published on npm with provenance. Changes: [`CHANGELOG.md`](CHANGELOG.md).
+- Status: experimental 0.1 release candidates, published on npm with provenance. Changes: [`CHANGELOG.md`](CHANGELOG.md).
 - Security reports: GitHub private vulnerability reporting, see [`SECURITY.md`](SECURITY.md).
 - Contributions: outside pull requests cannot be merged yet, see [`CONTRIBUTING.md`](CONTRIBUTING.md). Code of conduct: [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md).
 - Tests and security review: [`docs/TEST_MATRIX.md`](docs/TEST_MATRIX.md), [`docs/SECURITY_REVIEW.md`](docs/SECURITY_REVIEW.md). Independent reviewers: [`docs/REVIEW_GUIDE.md`](docs/REVIEW_GUIDE.md). Releasing: [`docs/RELEASING.md`](docs/RELEASING.md).

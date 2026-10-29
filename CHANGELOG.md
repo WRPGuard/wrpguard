@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.1.0-rc.1 (unreleased)
+## 0.1.0-rc.1 (2026-10-29)
 No change to evaluation semantics (`wrpguard.policy/0.1`), the report format (`wrpguard.report/1`) or the CLI.
 
 - `@wrpguard/core` ships JSON Schemas (draft 2020-12) for the scope declaration and the report: `@wrpguard/core/schemas/scope-1.schema.json` and `@wrpguard/core/schemas/report-1.schema.json`. Tests check that the scope schema accepts everything the parser accepts and rejects the same malformed scopes, and validate every report the library produces against the report schema.
