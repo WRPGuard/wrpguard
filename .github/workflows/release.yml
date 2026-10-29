@@ -56,5 +56,5 @@ jobs:
           flags=(--access public --provenance --tag "$tag")
           if [ "$DRY_RUN" = "true" ]; then flags+=(--dry-run); fi
           for name in core cli; do
-            npm publish "release/wrpguard-$name-$version.tgz" "${flags[@]}"
+            npm publish "./release/wrpguard-$name-$version.tgz" "${flags[@]}"
           done
