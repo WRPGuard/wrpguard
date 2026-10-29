@@ -1,6 +1,7 @@
-# Manual release: checks, packs and verifies @wrpguard/core and @wrpguard/cli, then publishes
-# them to npm with provenance. Starts only by hand (Actions tab or `gh workflow run`), and is a
-# dry run unless dry_run is set to false. See docs/RELEASING.md.
+# Manual release: checks, packs and verifies @wrpguard/core and @wrpguard/cli, then stages them
+# on npm with provenance (`npm stage publish`); a maintainer approves each staged package with
+# 2FA before it goes live. Starts only by hand (Actions tab or `gh workflow run`), and is a dry
+# run unless dry_run is set to false. See docs/RELEASING.md.
 name: release
 
 on:
@@ -43,10 +44,11 @@ jobs:
             release/*.cdx.json
             release/SHA256SUMS
           if-no-files-found: error
-      - name: Publish to npm
+      - name: Stage on npm (a maintainer approves with 2FA)
         env:
           DRY_RUN: ${{ inputs.dry_run }}
-          # Only for the first publish; afterwards trusted publishing (OIDC) needs no token.
+          # A granular token without 2FA bypass can stage; with trusted publishing (OIDC)
+          # configured, leave the secret unset.
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           set -euo pipefail
@@ -56,5 +58,5 @@ jobs:
           flags=(--access public --provenance --tag "$tag")
           if [ "$DRY_RUN" = "true" ]; then flags+=(--dry-run); fi
           for name in core cli; do
-            npm publish "./release/wrpguard-$name-$version.tgz" "${flags[@]}"
+            npm stage publish "./release/wrpguard-$name-$version.tgz" "${flags[@]}"
           done
