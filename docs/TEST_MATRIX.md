@@ -3,7 +3,7 @@
 **Build under test:** v0.1.0-rc.0, the tree of the first commit on `main` (2026-10-28). pnpm 9.15.9, Vitest 5.0.5.
 - Windows 10, Node.js 24.21.0.
 - Linux (WSL2 Debian, kernel 6.6), official Node.js 22.23.4 and 24.22.2 builds (SHA-256 verified), each from a clean `pnpm install --frozen-lockfile` of the staged tree.
-- GitHub CI has not run yet (no remote). macOS is untested.
+- GitHub Actions (`ubuntu-latest`): CI run 40799492668 green on Node 22.23.4 and 24.22.1 (226 passed each); release dry run 40803386961 green (npm 11.19.1). macOS is untested.
 
 ## Acceptance cases (docs/ACCEPTANCE.md)
 | ID | Required result | Observed | Test |
@@ -38,6 +38,8 @@
 | `pnpm secret-scan` | no matches (regex scan of the working tree only) |
 | `pnpm license-check` | `PolyForm-Noncommercial-1.0.0` in the root and both packages; a modified package `LICENSE.md` makes it exit 1 |
 | Clean Linux run of the staged tree (`pnpm install --frozen-lockfile` + `pnpm check`) | exit 0 on Node 22.23.4 and 24.22.2 |
+| `node scripts/pack-release.mjs` (Windows and in the release workflow) | both tarballs install cleanly with npm; no `private`, no `workspace:` ranges, `LICENSE.md` present; installed CLI prints the version and exits 0/2/3 on the fixtures; CycloneDX 1.5 SBOM and SHA256SUMS written |
+| `release` workflow, dry run | `npm publish --dry-run --provenance --tag next --access public` succeeds for both packages |
 | `pnpm audit` | No known vulnerabilities found |
 | `pnpm pack` + `npm install --offline` of both tarballs in an empty project | installs; installed `wrpguard` exits 0/2/3/1 on the fixtures; API import works (Node 24.21.0). Both tarballs contain `LICENSE.md` and the `license` field |
 

@@ -24,7 +24,7 @@ An offline preflight that checks whether a proposed OpenID4VP 1.0 DCQL query ask
 9. `intent_to_retain`, `multiple`, `trusted_authorities`, `require_cryptographic_holder_binding` do not affect the decision.
 10. The scope declaration is never authenticated; freshness, revocation and provenance are the caller's responsibility.
 11. Pre-parsed SDK inputs (`evaluateDcqlScope`) cannot be checked for duplicate JSON keys or for how numbers were written (e.g. `1.0`), and a `Proxy` can run code during inspection. Use `evaluateDcqlScopeFromJson` for untrusted text.
-12. Tested on Windows / Node 24 and on Linux (WSL2 Debian) / Node 22 and 24 from a clean frozen-lockfile install. GitHub CI has not run yet; macOS is untested.
+12. Tested on Windows / Node 24, on Linux (WSL2 Debian) / Node 22 and 24, and in GitHub CI (Ubuntu, Node 22 and 24). macOS is untested.
 
 ## Not claimed
 Not certified, not an official EU or OpenID validator, not cryptographically verified, not a legal or GDPR assessment, not production-ready.
