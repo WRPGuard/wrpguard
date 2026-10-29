@@ -1,6 +1,6 @@
 # Release readiness report — v0.1.0-rc.0
 
-**Date:** 2026-10-28 · **Prepared by:** lead agent · **Recommendation:** **Technically ready; the go/no-go is the owner's.** The code is in the private repository `WRPGuard/wrpguard` with green CI and a green release dry run. What remains are owner-only gates (below): legal review, ADR approval, two human reviewers, making the repository public, and the first npm publish.
+**Date:** 2026-10-28 · **Prepared by:** lead agent · **Recommendation:** **Technically ready; the go/no-go is the owner's.** `WRPGuard/wrpguard` is public with green CI. Both packages are **staged** on npm with provenance (release run 40806617035) and go live when the owner approves them with 2FA. Remaining owner-only gates are below.
 
 ## Gate status
 | Gate (RELEASE_CHECKLIST / ACCEPTANCE) | Status | Evidence |
@@ -50,15 +50,14 @@ After the fixes, all gates are green again (`pnpm check` exit 0; 225 passed, 1 s
 
 On 2026-10-28 the npm registry returned 404 for the `wrpguard` org scope, `@wrpguard/core`, `@wrpguard/cli` and unscoped `wrpguard`, and the GitHub API returned 404 for `wrpguard` as a user and as an organization. Availability can change until the owner creates them. No trademark search was done.
 
-Done since: GitHub organization `WRPGuard` created by the owner; private repository `WRPGuard/wrpguard` created and `main` pushed; Dependabot alerts and security updates enabled; repository topics set.
+Done since: npm organization `wrpguard` and GitHub organization `WRPGuard` created by the owner; repository `WRPGuard/wrpguard` created, pushed, and made **public** on the owner's decision (npm provenance requires a public source repository); private vulnerability reporting, Dependabot alerts and security updates enabled; `@wrpguard/core@0.1.0-rc.0` and `@wrpguard/cli@0.1.0-rc.0` staged on npm with tag `next` and provenance.
 
 ## READY FOR OWNER DECISION
-1. **npm organization `wrpguard`**: create it if not done yet (on 2026-10-28 the registry still reported the scope as not found). This reserves `@wrpguard`.
+1. **Approve the two staged packages** with 2FA (npmjs.com, Staged Packages tab, or `npm stage approve <stage-id>`). Then, recommended: trusted publishing and token removal (`docs/RELEASING.md`).
 2. **Require 2FA** for members of the GitHub organization `WRPGuard` (organization settings; the agent's token cannot change them).
 3. **Approve or amend ADR-001/002/003**: especially missing context ⇒ indeterminate; unknown properties ⇒ indeterminate; exact paths only; superset alternatives.
 4. **Legal**: review of the license choice; a commercial license agreement before any sale; a contributor agreement before merging outside code.
 5. **Human reviewers**: two people to sign off on ADR-002 mapping and the security tests.
-6. **Make the repository public**, then enable private vulnerability reporting.
-7. **First npm publish**: three commands in `docs/RELEASING.md` (token secret, run the workflow, switch to trusted publishing).
+6. **Supported versions and disclosure timetable** for `SECURITY.md`.
 
 The license was added on the owner's instruction. No outreach, publication, hosting or spending was performed.

@@ -68,7 +68,7 @@ WRPGuard is **source-available, not open source**. Copyright 2026 Vynx Labs LLC,
 This summary is not legal advice and does not change the license; [`LICENSE.md`](LICENSE.md) governs.
 
 ## Project status and governance
-- Status: release candidate for internal review. Not on npm yet; releases go only through the manual `release` workflow ([`docs/RELEASING.md`](docs/RELEASING.md)).
+- Status: release candidate. `0.1.0-rc.0` is staged on npm (tag `next`) pending maintainer approval; releases go only through the manual `release` workflow ([`docs/RELEASING.md`](docs/RELEASING.md)).
 - Security reports: GitHub private vulnerability reporting, see [`SECURITY.md`](SECURITY.md).
 - Contributions: outside pull requests cannot be merged yet, see [`CONTRIBUTING.md`](CONTRIBUTING.md). Code of conduct: [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md).
 - Release readiness, test matrix and owner decisions: [`docs/RELEASE_READINESS.md`](docs/RELEASE_READINESS.md), [`docs/TEST_MATRIX.md`](docs/TEST_MATRIX.md).
