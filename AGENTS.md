@@ -3,7 +3,7 @@
 The entire product is an **experimental, offline request-scope preflight**, not an official EUDI verifier or certificate validator.
 
 ## Mandatory reading
-Read `START_HERE.md`, `MASTER_PLAYBOOK.md`, `docs/PRD.md`, `docs/ARCHITECTURE.md`, `docs/SECURITY.md`, `docs/STANDARDS_MATRIX.md`, `docs/ACCEPTANCE.md`, `docs/PUBLIC_RELEASE_PLAN.md`, `docs/OWNER_APPROVAL_GATES.md` and your assigned task card before editing files.
+Read `README.md`, `docs/ARCHITECTURE.md`, `docs/SECURITY.md`, `docs/STANDARDS_MATRIX.md`, `docs/ACCEPTANCE.md`, the ADRs in `docs/adr/` and `docs/RELEASING.md` before editing files. Maintainers: planning, owner-gate and commercial documents are in the private repository `WRPGuard/wrpguard-internal`.
 
 ## Technical truthfulness and trust boundary
 - Evaluate a proposed OpenID4VP 1.0 **DCQL query** against a **caller-supplied normalized declaration**, never assert its source is genuine or current.
@@ -26,8 +26,8 @@ Read `START_HERE.md`, `MASTER_PLAYBOOK.md`, `docs/PRD.md`, `docs/ARCHITECTURE.md
 
 ## Publication / business boundaries
 - Strategy: **public-first core with optional private enterprise add-ons**. Do NOT keep the entire project private as its long-term distribution plan.
-- Do NOT independently change remote repo visibility, push public, create or change a LICENSE file, publish npm, establish a company account, start hosting, send outreach, accept legal agreements, or disclose vulnerabilities. These require explicit **human owner approval**; see `docs/OWNER_APPROVAL_GATES.md`.
-- License (owner decision 2026-10-28, `docs/LICENSING_DECISION.md`): PolyForm Noncommercial 1.0.0, licensor Vynx Labs LLC; commercial use requires a paid license. Describe the code as source-available, never as open source. Do not change `LICENSE.md`, the package copies or `license` fields without owner approval.
+- Do NOT independently change remote repo visibility, push public, create or change a LICENSE file, publish npm, establish a company account, start hosting, send outreach, accept legal agreements, or disclose vulnerabilities. These require explicit **human owner approval** (owner gates: `docs/OWNER_APPROVAL_GATES.md` in `WRPGuard/wrpguard-internal`).
+- License (owner decision 2026-10-28; `LICENSE.md`, README "License"): PolyForm Noncommercial 1.0.0, licensor Vynx Labs LLC; commercial use requires a paid license. Describe the code as source-available, never as open source. Do not change `LICENSE.md`, the package copies or `license` fields without owner approval.
 - Private commercial modules must live in distinct repositories/packages with clean IP and dependency boundaries.
 
 ## Completion gates

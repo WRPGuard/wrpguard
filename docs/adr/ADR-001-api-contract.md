@@ -2,7 +2,7 @@
 
 - **Status:** Accepted by lead, **frozen for v0.1**. Owner review requested. Any change to a frozen item requires a revision of this ADR.
 - **Date:** 2026-10-28
-- **Related:** ADR-002 (standards traceability), ADR-003 (input security), `docs/KIT_AUDIT.md`
+- **Related:** ADR-002 (standards traceability), ADR-003 (input security)
 
 ## Context
 WRPGuard evaluates a proposed OpenID4VP 1.0 DCQL query against a **caller-supplied, unverified** normalized scope declaration. The kit proposed `evaluateDcqlScope({ scope, dcqlQuery, context })` and asked the lead to freeze it before implementation.
@@ -15,7 +15,7 @@ WRPGuard evaluates a proposed OpenID4VP 1.0 DCQL query against a **caller-suppli
 | `@wrpguard/core` | types, strict JSON parser, DCQL/scope/context validation, matcher, report | **none** | **none** (no `node:` imports, no network, filesystem, time, randomness) |
 | `@wrpguard/cli` | `wrpguard` binary: reads local files, prints report | `@wrpguard/core` only | local file read, stdout/stderr |
 
-ESM only, Node.js `>=22`, TypeScript `strict`. Packages are published only by the manual `release` workflow with npm provenance (`docs/RELEASING.md`); `publishConfig.provenance` makes a local `npm publish` fail. Publishing remains an owner decision (OWNER_APPROVAL_GATES). License: `PolyForm-Noncommercial-1.0.0` (owner decision 2026-10-28, `docs/LICENSING_DECISION.md`); each package ships `LICENSE.md`.
+ESM only, Node.js `>=22`, TypeScript `strict`. Packages are published only by the manual `release` workflow with npm provenance (`docs/RELEASING.md`); `publishConfig.provenance` makes a local `npm publish` fail. Publishing remains an owner decision. License: `PolyForm-Noncommercial-1.0.0` (owner decision 2026-10-28, `docs/LICENSING_DECISION.md`); each package ships `LICENSE.md`.
 
 ### 2. Functions (frozen)
 ```ts
@@ -123,6 +123,6 @@ wrpguard --help | --version
 `wrpguard.scope/1` (input schema), `wrpguard.report/1` (output shape), `wrpguard.policy/0.1` (evaluation semantics) are versioned independently. Any change that can turn a previous `fail`/`indeterminate` into `pass` requires a new **policy** version and an ADR-002 entry.
 
 ## Consequences
-- The 60-second demo needs `--service onboarding --intended-use age-check` (kit audit A1).
+- The 60-second demo needs `--service onboarding --intended-use age-check`; without them the result is `indeterminate` (`MISSING_CONTEXT`).
 - SDK users passing pre-parsed objects lose duplicate-key protection; documented.
 - Two new reason codes beyond the kit list; one reserved code.

@@ -71,10 +71,7 @@ This summary is not legal advice and does not change the license; [`LICENSE.md`]
 - Status: release candidate. `0.1.0-rc.0` is staged on npm (tag `next`) pending maintainer approval; releases go only through the manual `release` workflow ([`docs/RELEASING.md`](docs/RELEASING.md)).
 - Security reports: GitHub private vulnerability reporting, see [`SECURITY.md`](SECURITY.md).
 - Contributions: outside pull requests cannot be merged yet, see [`CONTRIBUTING.md`](CONTRIBUTING.md). Code of conduct: [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md).
-- Release readiness, test matrix and owner decisions: [`docs/RELEASE_READINESS.md`](docs/RELEASE_READINESS.md), [`docs/TEST_MATRIX.md`](docs/TEST_MATRIX.md).
+- Tests and security review: [`docs/TEST_MATRIX.md`](docs/TEST_MATRIX.md), [`docs/SECURITY_REVIEW.md`](docs/SECURITY_REVIEW.md). Releasing: [`docs/RELEASING.md`](docs/RELEASING.md).
 
 ### Development
 `pnpm lint && pnpm typecheck && pnpm test && pnpm build && pnpm smoke && pnpm secret-scan && pnpm license-check` (or `pnpm check`).
-
-### Planning kit
-This repository started from an agent planning kit: [`START_HERE.md`](START_HERE.md), [`AGENTS.md`](AGENTS.md), [`MASTER_PLAYBOOK.md`](MASTER_PLAYBOOK.md), `docs/`, `prompts/`, `tasks/`. Deviations from the kit are recorded in [`docs/KIT_AUDIT.md`](docs/KIT_AUDIT.md).

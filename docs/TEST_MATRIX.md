@@ -75,4 +75,4 @@ Each mutation was applied alone to the core source, the suite was run, and the s
 | Number literal rounding to a registered index (`0.99999999999999999999` → 1) | **Found by review (F1), fixed**: WRPG-SYN-02 |
 | `toJSON` on SDK input changes the serialized request | **Found by review (F2), fixed**: ADR-003 §2 |
 
-Independent adversarial review: see `docs/RELEASE_READINESS.md`.
+Independent adversarial review: see `docs/SECURITY_REVIEW.md`.

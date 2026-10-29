@@ -2,13 +2,13 @@
 
 - **Status:** Accepted by lead, frozen for v0.1.
 - **Date:** 2026-10-28
-- **Revision 1 (2026-10-28):** changes after the independent adversarial review (`docs/RELEASE_READINESS.md`): integral-number lexeme rule (F1), `toJSON` detection (F2), tighter default limits and message truncation (F3), wider display-escape set (F4), non-blocking file open (FIFO), `--help`/`--version` as sole argument (F5). Marked *(rev. 1)* below.
+- **Revision 1 (2026-10-28):** changes after the independent adversarial review (`docs/SECURITY_REVIEW.md`): integral-number lexeme rule (F1), `toJSON` detection (F2), tighter default limits and message truncation (F3), wider display-escape set (F4), non-blocking file open (FIFO), `--help`/`--version` as sole argument (F5). Marked *(rev. 1)* below.
 
 ## Decisions
 
 ### 1. Own strict JSON parser; never `JSON.parse` on untrusted documents
 `parseJsonStrict` implements RFC 8259 grammar iteratively (no recursion) and:
-- rejects **duplicate object keys** (compared after unescaping). `JSON.parse` is last-wins; other parsers may be first-wins, so accepting duplicates allows a parser-differential false `pass` (kit audit A8);
+- rejects **duplicate object keys** (compared after unescaping). `JSON.parse` is last-wins; other parsers may be first-wins, so accepting duplicates allows a parser-differential false `pass`;
 - enforces byte, depth, node, string-length, array-length and object-property caps **during** parsing, so oversized input stops early;
 - builds objects with a `null` prototype; `__proto__`, `constructor` and `prototype` are ordinary data keys;
 - rejects non-finite numbers (e.g. `1e400`), lone surrogates are accepted as `JSON.parse` does;

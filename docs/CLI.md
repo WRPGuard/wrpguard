@@ -13,7 +13,7 @@ wrpguard --help | --version
 | `--intended-use <id>` | Intended use the request is for. Must equal `scope.intendedUseId`. |
 | `--json` | Print exactly one JSON document to stdout: a report (`wrpguard.report/1`) or an `invalid_input` report. |
 
-Each option may appear once. Without `--service` or `--intended-use` the result is `indeterminate` (`MISSING_CONTEXT`); this is deliberate (ADR-001, kit audit A1). `--help` and `--version` must be the only argument; combined with anything else they are a usage error (exit 1), so exit 0 always means an evaluated `pass`.
+Each option may appear once. Without `--service` or `--intended-use` the result is `indeterminate` (`MISSING_CONTEXT`); this is deliberate (ADR-001). `--help` and `--version` must be the only argument; combined with anything else they are a usage error (exit 1), so exit 0 always means an evaluated `pass`.
 
 ## Exit codes
 | Exit | Meaning |

@@ -2,7 +2,7 @@
 
 Releases go only through the manual `release` workflow (`.github/workflows/release.yml`). It runs `pnpm check`, packs both packages, installs the tarballs in a clean project, checks the installed CLI, writes a CycloneDX SBOM and `SHA256SUMS`, and publishes with npm provenance through **trusted publishing** (OIDC: no token, no 2FA prompt). With `stage=true` it stages instead, and a maintainer approves each package with 2FA. The workflow is a dry run unless `dry_run` is set to `false`. `publishConfig.provenance: true` makes a local `npm publish` fail, so packages cannot be published from a laptop by accident.
 
-Publishing is an owner decision (`docs/OWNER_APPROVAL_GATES.md`). Agents may run dry runs only.
+Publishing is an owner decision. Agents may run dry runs only.
 
 ## One-time setup: trusted publishing
 Requires npm >= 11.15 (`npx -y npm@11` works without upgrading) and one 2FA confirmation. On the npm 2FA page, tick "skip two-factor authentication for the next 5 minutes" so the second command does not ask again.

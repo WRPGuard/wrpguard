@@ -1,7 +1,7 @@
 # Changelog
 
 ## 0.1.0-rc.0 (unreleased, internal release candidate)
-First implementation of the planning kit v1.2. Not published. Licensed under PolyForm Noncommercial 1.0.0 (source-available); commercial use requires a license from Vynx Labs LLC.
+First release candidate. Licensed under PolyForm Noncommercial 1.0.0 (source-available); commercial use requires a license from Vynx Labs LLC.
 
 - `@wrpguard/core`: `evaluateDcqlScope`, `evaluateDcqlScopeFromJson`, `parseJsonStrict`. Report `wrpguard.report/1`, policy `wrpguard.policy/0.1`, scope schema `wrpguard.scope/1`.
 - `@wrpguard/cli`: `wrpguard check` with exit codes 0/2/3/1 and `--json`.
