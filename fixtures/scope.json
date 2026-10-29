@@ -1,0 +1,31 @@
+{
+  "schemaVersion": "wrpguard.scope/1",
+  "relyingPartyId": "rp-demo",
+  "serviceId": "onboarding",
+  "intendedUseId": "age-check",
+  "credentials": [
+    {
+      "format": "dc+sd-jwt",
+      "type": "https://example.org/credentials/age-attestation",
+      "claims": [
+        [
+          "age_over_18"
+        ]
+      ]
+    },
+    {
+      "format": "mso_mdoc",
+      "type": "org.iso.18013.5.1.mDL",
+      "claims": [
+        [
+          "org.iso.18013.5.1",
+          "age_over_18"
+        ]
+      ]
+    }
+  ],
+  "snapshot": {
+    "observedAt": "2026-10-28T00:00:00Z",
+    "sourceLabel": "synthetic-test-only"
+  }
+}

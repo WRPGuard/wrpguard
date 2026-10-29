@@ -1,0 +1,3 @@
+# Copy/paste to specialist CLI agent
+
+Read `AGENTS.md`, `docs/PRD.md`, `docs/ARCHITECTURE.md`, `docs/SECURITY.md`, `docs/STANDARDS_MATRIX.md`, `docs/ACCEPTANCE.md` and `tasks/04-adversarial-tests.md`. Implement **only the assigned paths and deliverables**. Do not invent external standards claims or represent supplied JSON as a cryptographically verified registration. The `pass` decision means local preflight match only. Unknown / complex cases must return `indeterminate` or fail; never silently allow. Write tests first, execute appropriate checks, then report source clauses, changed files, outputs, risks, and handoff details to the lead. Do not publish or move release state.

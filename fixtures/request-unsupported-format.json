@@ -1,0 +1,23 @@
+{
+  "credentials": [
+    {
+      "id": "w3c_age",
+      "format": "jwt_vc_json",
+      "meta": {
+        "type_values": [
+          [
+            "AgeCredential"
+          ]
+        ]
+      },
+      "claims": [
+        {
+          "path": [
+            "credentialSubject",
+            "age_over_18"
+          ]
+        }
+      ]
+    }
+  ]
+}

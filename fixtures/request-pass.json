@@ -1,0 +1,20 @@
+{
+  "credentials": [
+    {
+      "id": "age",
+      "format": "dc+sd-jwt",
+      "meta": {
+        "vct_values": [
+          "https://example.org/credentials/age-attestation"
+        ]
+      },
+      "claims": [
+        {
+          "path": [
+            "age_over_18"
+          ]
+        }
+      ]
+    }
+  ]
+}

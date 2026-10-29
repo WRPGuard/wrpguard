@@ -1,0 +1,180 @@
+{
+  "kit_version": "1.2",
+  "prepared": "2026-10-28",
+  "status": "planning only; no implemented SDK",
+  "strategy": "public-first core + separate private enterprise extensions; publication requires owner approval",
+  "files": [
+    {
+      "path": "AGENTS.md",
+      "sha256": "134e8b9d80f458a585e806393038e16a07d51d71f80721828b79b9bf8ddd4c7d"
+    },
+    {
+      "path": "MASTER_PLAYBOOK.md",
+      "sha256": "492ff6fc83534b3bdc138688c60f597165d906c9eb98d6d9e1bc86d26dcaafc5"
+    },
+    {
+      "path": "README.md",
+      "sha256": "ebf4acaa03dc1de51b2deea55b7d25049b95932235b4705ebea1c55852cf1be2"
+    },
+    {
+      "path": "START_HERE.md",
+      "sha256": "51cbcadfde660d5db149cf3f6d331f74cd2ff945f9a1f1edf534a1e1a94b1750"
+    },
+    {
+      "path": "docs/ACCEPTANCE.md",
+      "sha256": "0ca67a876ac85dc3a4ca84dfebb35a586c13e385cedcb0a2df076fbea670fb71"
+    },
+    {
+      "path": "docs/ADOPTION_AND_LICENSING.md",
+      "sha256": "15a8ea0d9c44e025eccf93e50f65f4076b2e4d59210dde5f5a6b3721c0695e7e"
+    },
+    {
+      "path": "docs/ARCHITECTURE.md",
+      "sha256": "7acc502690873671aaaa01aa3efa126858beff6342ab3f9ffd7d4190a9506f40"
+    },
+    {
+      "path": "docs/COMMERCIAL.md",
+      "sha256": "5a760012339c03f84eeccc6bd6c0c244828b4a3a4a008fc97c23a5139cdea823"
+    },
+    {
+      "path": "docs/COMMERCIAL_VALIDATION.md",
+      "sha256": "0d1c5d6d7eda2d4dbb070fb83d4280154466d71b2b49bf8f6a7af78da93af444"
+    },
+    {
+      "path": "docs/EXTERNAL_POSITIONING.md",
+      "sha256": "8cc2fb447f96714936a1d1d40206637d697119f3c2610f48d0d2c68a8112da6f"
+    },
+    {
+      "path": "docs/LICENSING_DECISION.md",
+      "sha256": "31f736f2c991f6cb16a4820e1d85ab88b9ead29fa211c6433306497fdd334984"
+    },
+    {
+      "path": "docs/OWNER_APPROVAL_GATES.md",
+      "sha256": "bfba88379d5a31269dd4edd1d062bf7f4d03219187d5e8e8cd2dedba6995a2de"
+    },
+    {
+      "path": "docs/OWNER_CHECKLIST.md",
+      "sha256": "6cc720c5a4271e1248422d65e2fe6babb73a17246b4deac544922f95d0f7bbe0"
+    },
+    {
+      "path": "docs/PRD.md",
+      "sha256": "d7e2a19cdf0c5e7647008e07391ffecb4f72f74e7bbaaf73b6d5002dc5a3443e"
+    },
+    {
+      "path": "docs/PUBLIC_RELEASE_PLAN.md",
+      "sha256": "e6863f765e18d6131b21115d657d74b37d666b6d781a9e4f303ea68a4fc1ec87"
+    },
+    {
+      "path": "docs/RELEASE_CHECKLIST.md",
+      "sha256": "5906842f1bcaf9bfc12b895a02f4efb831a397487424d2f273d7d49aa223dff6"
+    },
+    {
+      "path": "docs/ROADMAP_30_DAYS.md",
+      "sha256": "5863ee653776d5e297d9c523701d304b47551086d72083810b0580213857bdf2"
+    },
+    {
+      "path": "docs/SECURITY.md",
+      "sha256": "2feea70f9a7f85eb97f186ae86d78a148c30d4ecb7beebf88231cb621a6c7f93"
+    },
+    {
+      "path": "docs/STANDARDS_MATRIX.md",
+      "sha256": "cebc2883d8f7eef257cdda8d0648bec3a755ac3cfee7cb0e038e1cf0979753a6"
+    },
+    {
+      "path": "docs/STANDARDS_REVIEW_NOTES.md",
+      "sha256": "047ea851564c0ff9ec2561880852e4c41099f7d355b656fa0fbdde4351aa915b"
+    },
+    {
+      "path": "docs/WORKSTREAM_OWNERSHIP.md",
+      "sha256": "b0e92cdf143ddba57c1fea9578a227105f1f5da19b0274305cef278f053d4652"
+    },
+    {
+      "path": "examples/README.md",
+      "sha256": "1b0b6896d03ad15bdbbbf480f367400e357d6698c9a5d0512c933a394468fee9"
+    },
+    {
+      "path": "fixtures/README.md",
+      "sha256": "15eef7485f50de59795b8e4c203173871452ad8ef79f034809c41d3a018015d0"
+    },
+    {
+      "path": "fixtures/request-indeterminate.json",
+      "sha256": "0d1de98292313a7d12d74e4c838216e260b4633d0bc91191ce8402cf8d55ad6d"
+    },
+    {
+      "path": "fixtures/request-overask.json",
+      "sha256": "d55694600aa7bf1e7fb084db0f424b3cb4a6ee17040295b3fec98bd98c567e1e"
+    },
+    {
+      "path": "fixtures/request-pass.json",
+      "sha256": "8046087cee37c52c3434b8b061623f1be4db733a75b8ac788774ab2af9950ba4"
+    },
+    {
+      "path": "fixtures/scope.json",
+      "sha256": "df28658da38fe8e3d7ce2b9d7e5453399a39fa85dcd3175e09d8dc7258464f70"
+    },
+    {
+      "path": "prompts/00-lead.md",
+      "sha256": "6a85bd3b5e90441c17600a745865cbe6fe329eb374ff84fd45bb3583b81dadb5"
+    },
+    {
+      "path": "prompts/01-standards-and-contract.md",
+      "sha256": "557666dc31d48b5a9aa804a9b9133672b9b78406992dc348d2fa48496e4bddc8"
+    },
+    {
+      "path": "prompts/02-workspace-and-parser.md",
+      "sha256": "e62331ece43dc6bc1996aaea0dfc1c58b974a7179fe15f965fdf70967882664e"
+    },
+    {
+      "path": "prompts/03-matching-engine.md",
+      "sha256": "9093e943b1c2ae6a9b3f05d1631835f96f995723da853cea417b2226a18cffa3"
+    },
+    {
+      "path": "prompts/04-adversarial-tests.md",
+      "sha256": "cb0011ef91bc85da0e990acd625144cdade345de0d76d6833f2e1bf861700ef7"
+    },
+    {
+      "path": "prompts/05-cli-and-examples.md",
+      "sha256": "a62220c5fbb72efd906ce036a9b6f9f45892ffed90f759ec01f4dbeb37b83b79"
+    },
+    {
+      "path": "prompts/06-release-review.md",
+      "sha256": "611d3390816139f96f175c79dd427bd94910de37f7ce7314c2dea4fa881d1976"
+    },
+    {
+      "path": "tasks/01-standards-and-contract.md",
+      "sha256": "cae3ceb67219eb17ed61dba7f9d32f2ccc3a6128c060cb01fe422cebf3052c42"
+    },
+    {
+      "path": "tasks/02-workspace-and-parser.md",
+      "sha256": "e6b17de273d2c18ab86d7f63471b4b9833e28dd35b835f0dbf852d675fff3257"
+    },
+    {
+      "path": "tasks/03-matching-engine.md",
+      "sha256": "0bcae7e4a104c4ee7662ff408148b512e7adcb5980981091cdefb837d9599915"
+    },
+    {
+      "path": "tasks/04-adversarial-tests.md",
+      "sha256": "9cea16f4f9c101db85c61eccdd4be576c6d9bdd02353c7c5d2cb3651a529289a"
+    },
+    {
+      "path": "tasks/05-cli-and-examples.md",
+      "sha256": "75d43b763c47d4ccdf29eeea1068d3e7937187a0c27412ef970aeb5d44dc6ffe"
+    },
+    {
+      "path": "tasks/06-release-review.md",
+      "sha256": "80e354e806b1a76c607f7c4669ddd53d077622a31dcb292ec1c2931ec4362fe1"
+    },
+    {
+      "path": "templates/CONTRIBUTING_DRAFT.md",
+      "sha256": "655fd878a37f45a1fa8f789b28a4bd28d938e7564032c7a91c9e09d44b97ad7c"
+    },
+    {
+      "path": "templates/PR_TEMPLATE.md",
+      "sha256": "9dbfdb5921fe2792984a39216018e99f8010ebde2390ee04686820a2799757ad"
+    },
+    {
+      "path": "templates/SECURITY_POLICY_DRAFT.md",
+      "sha256": "3b38553727b797f1e1db65fc32943b4dc29d8c6659e603f0da060f5b2c27b848"
+    }
+  ]
+}

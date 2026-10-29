@@ -1,0 +1,44 @@
+{
+  "name": "@wrpguard/core",
+  "version": "0.1.0-rc.0",
+  "private": true,
+  "description": "Experimental offline preflight: checks whether an OpenID4VP 1.0 DCQL query fits a caller-supplied, unverified scope declaration. Not a certificate validator or EUDI conformance tool.",
+  "license": "PolyForm-Noncommercial-1.0.0",
+  "author": "Vynx Labs LLC",
+  "homepage": "https://github.com/wrpguard/wrpguard#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wrpguard/wrpguard.git",
+    "directory": "packages/core"
+  },
+  "bugs": {
+    "url": "https://github.com/wrpguard/wrpguard/issues"
+  },
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE.md"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "keywords": [
+    "openid4vp",
+    "dcql",
+    "eudi",
+    "preflight"
+  ],
+  "scripts": {
+    "build": "node ../../scripts/clean.mjs dist && tsc -p tsconfig.build.json"
+  }
+}

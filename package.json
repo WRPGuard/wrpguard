@@ -1,0 +1,33 @@
+{
+  "name": "wrpguard-workspace",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Experimental offline preflight: does a proposed OpenID4VP 1.0 DCQL query fit a caller-supplied scope declaration?",
+  "license": "PolyForm-Noncommercial-1.0.0",
+  "author": "Vynx Labs LLC",
+  "type": "module",
+  "packageManager": "pnpm@9.15.9",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "vitest run",
+    "build": "pnpm -r --workspace-concurrency=1 run build",
+    "wrpguard": "node packages/cli/dist/bin.js",
+    "smoke": "node scripts/smoke-cli.mjs",
+    "secret-scan": "node scripts/secret-scan.mjs",
+    "check": "pnpm lint && pnpm typecheck && pnpm test && pnpm build && pnpm smoke && pnpm secret-scan && pnpm license-check",
+    "license-check": "node scripts/check-license.mjs"
+  },
+  "devDependencies": {
+    "@eslint/js": "10.0.1",
+    "@types/node": "22.20.5",
+    "eslint": "10.13.0",
+    "fast-check": "4.10.2",
+    "typescript": "6.0.3",
+    "typescript-eslint": "8.72.1",
+    "vitest": "5.0.5"
+  }
+}
