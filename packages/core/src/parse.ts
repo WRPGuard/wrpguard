@@ -81,7 +81,7 @@ export function pathKey(path: ClaimPath): string {
   return JSON.stringify(path);
 }
 
-class Issues {
+export class Issues {
   readonly list: InputIssue[] = [];
   constructor(
     private readonly source: InputSource,
@@ -97,7 +97,7 @@ class Issues {
   }
 }
 
-function isSupportedFormat(format: string): format is SupportedFormat {
+export function isSupportedFormat(format: string): format is SupportedFormat {
   return (SUPPORTED_FORMATS as readonly string[]).includes(format);
 }
 
@@ -105,7 +105,7 @@ function isSupportedFormat(format: string): format is SupportedFormat {
  * Validates a claims path pointer (OpenID4VP 1.0 §7; mdoc §7.2). Empty-string components and
  * `-0` are rejected by WRPGuard policy (WRPG-SYN-02).
  */
-function parsePath(
+export function parsePath(
   value: JsonValue | undefined,
   pointer: string,
   mdoc: boolean,
@@ -178,7 +178,7 @@ function collectUnknownKeys(object: JsonObject, known: readonly string[], pointe
   }
 }
 
-function nonEmptyString(value: JsonValue | undefined): value is string {
+export function nonEmptyString(value: JsonValue | undefined): value is string {
   return typeof value === 'string' && value.length > 0;
 }
 

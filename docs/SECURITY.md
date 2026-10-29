@@ -22,6 +22,9 @@ The supplied normalized scope is NOT independently verified. The library cannot 
 | Getter/`toJSON` side effects in SDK-supplied objects (incl. non-enumerable or prototype-inherited `toJSON`) | values are snapshotted without invoking accessors; any reachable `toJSON` and non-plain data rejected (ADR-003 §2) |
 | Number-literal parser differential (`0.99999999999999999999` rounds to index 1 as a double) | integral numbers must be written as integers (WRPG-SYN-02) |
 | Report/output amplification | tightened per-field caps, findings cap, message truncation (ADR-003 §3, §5) |
+| Forged, expired or revoked registration certificate | decoded only, never verified; documented in CLI output ("signature NOT verified"), docs and `scopeTrust` (WRPG-CRT-01) |
+| Certificate field WRPGuard does not know that might narrow the declaration | rejected, not ignored (WRPG-CRT-01) |
+| Parser differential inside a JWT (duplicate keys, number spellings, non-canonical base64url) | strict base64url and UTF-8, strict JSON parser on header and payload (ADR-003 §1a) |
 | Oversized file read into memory before checks | CLI stats and reads at most `maxInputBytes + 1` bytes |
 
 Implementation status (v0.1.0-rc.0): every row above has an automated test; see `docs/TEST_MATRIX.md`.

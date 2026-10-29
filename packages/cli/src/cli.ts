@@ -1,6 +1,8 @@
 /**
  * `wrpguard` command implementation (ADR-001 §8). Offline: reads two local files, writes to
- * stdout/stderr, makes no network calls and writes no files.
+ * stdout/stderr, makes no network calls and writes no files. The declaration is a
+ * wrpguard.scope/1 file (--scope) or an ETSI TS 119 475 registration certificate
+ * (--registration-cert, WRPG-CRT-01/02).
  */
 import { parseArgs } from 'node:util';
 import {
@@ -8,6 +10,7 @@ import {
   POLICY_VERSION,
   REPORT_VERSION,
   escapeControlCharacters,
+  evaluateDcqlRegistrationCertificate,
   evaluateDcqlScopeFromJson,
   type EvaluationContext,
   type InputErrorReport,
@@ -31,17 +34,22 @@ export interface CliOptions {
 
 export const USAGE = `Usage:
   wrpguard check --scope <file> --request <file> [--service <id>] [--intended-use <id>] [--json]
+  wrpguard check --registration-cert <file> --request <file> [--intended-use <id>] [--json]
   wrpguard --help | --version
 
 Checks offline whether an OpenID4VP 1.0 DCQL query (--request) fits a caller-supplied,
-UNVERIFIED scope declaration (--scope, schema wrpguard.scope/1).
+UNVERIFIED declaration: a scope file (--scope, schema wrpguard.scope/1) or an ETSI TS 119 475
+registration certificate (--registration-cert, signature NOT verified).
 
 Options:
-  --scope <file>        scope declaration JSON (wrpguard.scope/1)
-  --request <file>      bare DCQL query JSON (the value of "dcql_query")
-  --service <id>        service the request will be sent for; must equal scope.serviceId
-  --intended-use <id>   intended use the request is for; must equal scope.intendedUseId
-  --json                print one JSON document (report or invalid-input report) to stdout
+  --scope <file>              scope declaration JSON (wrpguard.scope/1)
+  --registration-cert <file>  registration certificate: compact JWT (rc-wrp+jwt) or its JSON payload
+  --request <file>            bare DCQL query JSON (the value of "dcql_query")
+  --service <id>              service the request will be sent for; must equal scope.serviceId
+                              (not allowed with --registration-cert: certificates have no service ID)
+  --intended-use <id>         intended use the request is for; must equal scope.intendedUseId, or
+                              the certificate intended_use_id (optional with --registration-cert)
+  --json                      print one JSON document (report or invalid-input report) to stdout
   -h, --help            show this help
   --version             show version
 
@@ -85,14 +93,15 @@ async function runCommand(argv: readonly string[], io: CliIo): Promise<number> {
   }
 
   const [scopeRead, requestRead] = await Promise.all([
-    readInputFile(args.scope, DEFAULT_LIMITS.maxInputBytes),
+    readInputFile(args.declaration.file, DEFAULT_LIMITS.maxInputBytes),
     readInputFile(args.request, DEFAULT_LIMITS.maxInputBytes),
   ]);
 
   const ioErrors: string[] = [];
   const issues: InputIssue[] = [];
+  const declarationOption = args.declaration.kind === 'scope' ? '--scope' : '--registration-cert';
   for (const [label, source, outcome] of [
-    ['--scope', 'scope', scopeRead],
+    [declarationOption, 'scope', scopeRead],
     ['--request', 'dcqlQuery', requestRead],
   ] as const) {
     if (outcome.kind === 'io-error') {
@@ -104,7 +113,10 @@ async function runCommand(argv: readonly string[], io: CliIo): Promise<number> {
         code: source === 'scope' ? 'MALFORMED_SCOPE' : 'MALFORMED_DCQL',
         source,
         pointer: '',
-        message: outcome.message,
+        message:
+          label === '--registration-cert'
+            ? `${outcome.message}; CWT registration certificates (rc-wrp+cwt) are not supported`
+            : outcome.message,
       });
     }
   }
@@ -124,14 +136,13 @@ async function runCommand(argv: readonly string[], io: CliIo): Promise<number> {
   if (args.service !== undefined) context.serviceId = args.service;
   if (args.intendedUse !== undefined) context.intendedUseId = args.intendedUse;
 
-  const result = evaluateDcqlScopeFromJson({
-    scopeJson: scopeRead.text,
-    dcqlQueryJson: requestRead.text,
-    context: context satisfies EvaluationContext,
-  });
+  const result =
+    args.declaration.kind === 'scope'
+      ? evaluateDcqlScopeFromJson({ scopeJson: scopeRead.text, dcqlQueryJson: requestRead.text, context: context satisfies EvaluationContext })
+      : evaluateDcqlRegistrationCertificate({ registrationCertificate: scopeRead.text, dcqlQueryJson: requestRead.text, context });
   if (!result.ok) return printInputError(result.error, args.json, io);
 
-  io.stdout(args.json ? renderJson(result.report) : renderReport(result.report));
+  io.stdout(args.json ? renderJson(result.report) : renderReport(result.report, args.declaration.kind));
   return EXIT_CODES[result.report.decision];
 }
 
@@ -145,7 +156,7 @@ interface CheckArgs {
   readonly help: boolean;
   readonly version: boolean;
   readonly json: boolean;
-  readonly scope: string;
+  readonly declaration: { readonly kind: 'scope' | 'registrationCertificate'; readonly file: string };
   readonly request: string;
   readonly service: string | undefined;
   readonly intendedUse: string | undefined;
@@ -160,6 +171,7 @@ function parseCommandLine(argv: readonly string[]): CheckArgs {
       strict: true,
       options: {
         scope: { type: 'string', multiple: true },
+        'registration-cert': { type: 'string', multiple: true },
         request: { type: 'string', multiple: true },
         service: { type: 'string', multiple: true },
         'intended-use': { type: 'string', multiple: true },
@@ -172,7 +184,15 @@ function parseCommandLine(argv: readonly string[]): CheckArgs {
     throw new UsageError(error instanceof Error ? error.message : 'invalid arguments');
   }
   const { values, positionals } = parsed;
-  const base = { help: false, version: false, json: values.json === true, scope: '', request: '', service: undefined, intendedUse: undefined };
+  const base = {
+    help: false,
+    version: false,
+    json: values.json === true,
+    declaration: { kind: 'scope' as const, file: '' },
+    request: '',
+    service: undefined,
+    intendedUse: undefined,
+  };
   // Exit 0 also means "pass", so --help/--version must not be combinable with a check.
   if (values.help === true || values.version === true) {
     if (argv.length !== 1) throw new UsageError('--help and --version must be the only argument');
@@ -191,11 +211,19 @@ function parseCommandLine(argv: readonly string[]): CheckArgs {
     if (list.length > 1) throw new UsageError(`option --${name} given more than once`);
     return list[0];
   };
+  const scope = single('scope', values.scope, false);
+  const certificate = single('registration-cert', values['registration-cert'], false);
+  if (scope !== undefined && certificate !== undefined) throw new UsageError('use either --scope or --registration-cert, not both');
+  if (scope === undefined && certificate === undefined) throw new UsageError('missing required option --scope or --registration-cert');
+  const service = single('service', values.service, false);
+  if (certificate !== undefined && service !== undefined) {
+    throw new UsageError('--service cannot be used with --registration-cert: a registration certificate has no service identifier');
+  }
   return {
     ...base,
-    scope: single('scope', values.scope, true) as string,
+    declaration: scope !== undefined ? { kind: 'scope', file: scope } : { kind: 'registrationCertificate', file: certificate as string },
     request: single('request', values.request, true) as string,
-    service: single('service', values.service, false),
+    service,
     intendedUse: single('intended-use', values['intended-use'], false),
   };
 }

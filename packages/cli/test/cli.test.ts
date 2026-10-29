@@ -206,6 +206,51 @@ describe('usage and I/O errors => exit 1', () => {
   });
 });
 
+describe('--registration-cert (ETSI TS 119 475, WRPG-CRT-01/02)', () => {
+  const cert = (file: string, request: string, ...extra: string[]) =>
+    cli('check', '--registration-cert', fx(file), '--request', fx(request), ...extra);
+
+  it.each([
+    ['registration-cert.jwt', 'request-pass.json', [], 0],
+    ['registration-cert.json', 'request-pass.json', [], 0],
+    ['registration-cert.jwt', 'request-mdoc-pass.json', ['--intended-use', 'age-check'], 0],
+    ['registration-cert.jwt', 'request-overask.json', [], 2],
+    ['registration-cert.jwt', 'request-pass.json', ['--intended-use', 'other'], 2],
+    ['registration-cert.json', 'request-indeterminate.json', [], 3],
+    ['registration-cert.jwt', 'request-malformed-path.json', [], 1],
+  ] as const)('%s + %s %j => exit %i', async (file, request, extra, expected) => {
+    expect((await cert(file, request, ...extra)).code).toBe(expected);
+    const json = await cert(file, request, ...extra, '--json');
+    expect(json.code).toBe(expected);
+    expect(json.stderr).toBe('');
+  });
+
+  it('human output names the certificate and says the signature is not verified', async () => {
+    const { stdout } = await cert('registration-cert.jwt', 'request-pass.json');
+    expect(stdout).toContain('Registration certificate: subject "synthetic-rp-0001", intended use "age-check" (decoded, signature NOT verified)');
+  });
+
+  it.each([
+    ['--service with a certificate', ['--registration-cert', fx('registration-cert.jwt'), '--request', fx('request-pass.json'), '--service', 'x'], 'no service identifier'],
+    ['both --scope and --registration-cert', ['--scope', fx('scope.json'), '--registration-cert', fx('registration-cert.jwt'), '--request', fx('request-pass.json')], 'not both'],
+    ['neither declaration option', ['--request', fx('request-pass.json')], '--scope or --registration-cert'],
+    ['--registration-cert twice', ['--registration-cert', fx('registration-cert.jwt'), '--registration-cert', fx('registration-cert.jwt'), '--request', fx('request-pass.json')], 'more than once'],
+  ])('usage error: %s', async (_name, args, message) => {
+    const { code, stdout, stderr } = await cli('check', ...args);
+    expect(code).toBe(1);
+    expect(stdout).toBe('');
+    expect(stderr).toContain(message);
+  });
+
+  it('a binary (CWT) certificate file is invalid input with a hint', async () => {
+    const path = tempFile('cert.cwt', Buffer.from([0xd2, 0x84, 0x43, 0xa1, 0x01, 0x26, 0xff]));
+    const { code, stderr } = await cli('check', '--registration-cert', path, '--request', fx('request-pass.json'));
+    expect(code).toBe(1);
+    expect(stderr).toContain('MALFORMED_SCOPE');
+    expect(stderr).toContain('rc-wrp+cwt');
+  });
+});
+
 describe('help and version', () => {
   it('--help prints usage with exit codes', async () => {
     const { code, stdout } = await cli('--help');

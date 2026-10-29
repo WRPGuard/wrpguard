@@ -1,19 +1,21 @@
-# `wrpguard` CLI reference (v0.1.0-rc.0)
+# `wrpguard` CLI reference (0.1)
 
 ```
 wrpguard check --scope <file> --request <file> [--service <id>] [--intended-use <id>] [--json]
+wrpguard check --registration-cert <file> --request <file> [--intended-use <id>] [--json]
 wrpguard --help | --version
 ```
 
 | Option | Meaning |
 |---|---|
 | `--scope <file>` | Scope declaration, schema `wrpguard.scope/1` (see below). Caller-supplied and **unverified**. |
+| `--registration-cert <file>` | Instead of `--scope`: an ETSI TS 119 475 registration certificate, as the compact JWT (`typ` `rc-wrp+jwt`), the base64url-wrapped JWT from a request's `verifier_info` `registration_cert` element (ETSI TS 119 472-2 RO-16), or the decoded JSON payload. Decoded, **not verified**. See below. |
 | `--request <file>` | A bare DCQL query: the value of the Authorization Request's `dcql_query`, not the whole request. |
-| `--service <id>` | Service the request will be sent for. Must equal `scope.serviceId`. |
-| `--intended-use <id>` | Intended use the request is for. Must equal `scope.intendedUseId`. |
+| `--service <id>` | Service the request will be sent for. Must equal `scope.serviceId`. Not allowed with `--registration-cert`. |
+| `--intended-use <id>` | Intended use the request is for. Must equal `scope.intendedUseId`, or the certificate's `intended_use_id`. |
 | `--json` | Print exactly one JSON document to stdout: a report (`wrpguard.report/1`) or an `invalid_input` report. |
 
-Each option may appear once. Without `--service` or `--intended-use` the result is `indeterminate` (`MISSING_CONTEXT`); this is deliberate (ADR-001). `--help` and `--version` must be the only argument; combined with anything else they are a usage error (exit 1), so exit 0 always means an evaluated `pass`.
+Each option may appear once, and exactly one of `--scope` and `--registration-cert` is required. With `--scope`, missing `--service` or `--intended-use` gives `indeterminate` (`MISSING_CONTEXT`); this is deliberate (ADR-001). `--help` and `--version` must be the only argument; combined with anything else they are a usage error (exit 1), so exit 0 always means an evaluated `pass`.
 
 ## Exit codes
 | Exit | Meaning |
@@ -50,6 +52,18 @@ Each option may appear once. Without `--service` or `--intended-use` the result 
 }
 ```
 Closed schema (JSON Schema: `@wrpguard/core/schemas/scope-1.schema.json`): unknown properties are rejected. One entry per `format` + `type`; `claims` are exact OpenID4VP claims path pointers (mdoc: exactly `[namespace, element]`). `snapshot` is informational and never evaluated; it is not evidence of provenance or freshness. Mapping from EUDI TS5: ADR-002.
+
+## Registration certificate (`--registration-cert`)
+An ETSI TS 119 475 V1.2.1 wallet-relying party registration certificate can replace the scope file: the compact JWT (`typ` `rc-wrp+jwt`), the base64url-wrapped JWT from a request's `verifier_info` `registration_cert` element (ETSI TS 119 472-2 RO-16), or the decoded JSON payload.
+
+- Its `credentials` entries are the declaration: for each `vct_values` entry (or `doctype_value`), the paths in `claim`. Entries for the same format and type are merged.
+- An entry without `claim` declares the credential type but **no claims**, so requesting any claim of it fails. (Annex B.2.9 says such a certificate "does not declare any specific attributes"; some wallets read it as allowing any claim.)
+- Unknown fields inside a credentials entry, its `meta` or its claims are rejected (exit 1), including `claims` where the specification says `claim`. Payload fields that do not describe requestable data (name, policies, entitlements, ...) are ignored.
+- The certificate covers one intended use and is sent with the request, so no context is needed. `--intended-use` is optional and must equal `intended_use_id`; if the certificate has no `intended_use_id`, a given `--intended-use` cannot be confirmed (exit 3). `--service` is a usage error.
+- **Not checked:** signature, certificate chain, status list, `iat`/`exp`. A `pass` means only that the query fits the certificate's `credentials` as written. CWT certificates (`rc-wrp+cwt`) are not supported.
+- Report `subject`: `relyingPartyId` = `sub`, `intendedUseId` = `intended_use_id` (or `""`), `serviceId` = `""`.
+
+Rules: ADR-002 WRPG-CRT-01 and WRPG-CRT-02.
 
 ## Report (`--json`)
 ```json

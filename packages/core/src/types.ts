@@ -44,7 +44,8 @@ export const SCOPE_SCHEMA_VERSION = 'wrpguard.scope/1';
 
 export const STANDARDS_SNAPSHOT = Object.freeze({
   dcql: 'OpenID4VP 1.0 Final (2025-07-09): Sections 6, 7; Appendix B.2, B.3',
-  registrationModel: 'Informed by EUDI TS5 v1.6 (2026-09-30); WRPGuard does not parse TS5 objects',
+  registrationModel:
+    'Informed by EUDI TS5 v1.6 (2026-09-30); registration certificates per ETSI TS 119 475 V1.2.1 (2026-03), decoded without signature verification',
 });
 
 export const REPORT_NOTICE =
@@ -124,6 +125,15 @@ export interface EvaluateJsonInput {
   readonly scopeJson: string;
   readonly dcqlQueryJson: string;
   readonly context: EvaluationContext;
+}
+
+/** A registration certificate instead of a scope file (ADR-002 WRPG-CRT-01, WRPG-CRT-02). */
+export interface EvaluateRegistrationCertificateInput {
+  /** ETSI TS 119 475 WRPRC: the compact JWT (`typ: rc-wrp+jwt`) or its decoded JSON payload. Not verified. */
+  readonly registrationCertificate: string;
+  readonly dcqlQueryJson: string;
+  /** Optional: `intendedUseId` is checked against the certificate's `intended_use_id`; `serviceId` is rejected. */
+  readonly context?: EvaluationContext;
 }
 
 export interface EvaluateOptions {

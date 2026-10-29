@@ -16,13 +16,19 @@ export function renderJson(document: EvaluationReport | InputErrorReport): strin
 
 const safe = escapeControlCharacters;
 
-export function renderReport(report: EvaluationReport): string {
+export function renderReport(report: EvaluationReport, declaration: 'scope' | 'registrationCertificate' = 'scope'): string {
   const exit = EXIT_CODES[report.decision];
   const { subject, evaluated } = report;
+  const quoted = (text: string): string => safe(JSON.stringify(text));
+  const intendedUse = subject.intendedUseId === '' ? 'no intended_use_id' : `intended use ${quoted(subject.intendedUseId)}`;
+  const declared =
+    declaration === 'scope'
+      ? `Scope: relying party ${quoted(subject.relyingPartyId)}, service ${quoted(subject.serviceId)}, ` +
+        `intended use ${quoted(subject.intendedUseId)} (caller-supplied, unverified)`
+      : `Registration certificate: subject ${quoted(subject.relyingPartyId)}, ${intendedUse} (decoded, signature NOT verified)`;
   const lines = [
     `WRPGuard preflight: ${report.decision.toUpperCase()} (exit ${String(exit)})`,
-    `Scope: relying party ${safe(JSON.stringify(subject.relyingPartyId))}, service ${safe(JSON.stringify(subject.serviceId))}, ` +
-      `intended use ${safe(JSON.stringify(subject.intendedUseId))} (caller-supplied, unverified)`,
+    declared,
     `Evaluated ${plural(evaluated.credentialQueries, 'credential query', 'credential queries')}, ` +
       `${plural(evaluated.claimQueries, 'claim query', 'claim queries')} under ${report.policyVersion}`,
   ];

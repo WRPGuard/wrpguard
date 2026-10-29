@@ -1,0 +1,50 @@
+{
+  "name": "Synthetic Demo Relying Party",
+  "sub_ln": "Synthetic Demo Relying Party (test only)",
+  "sub": "synthetic-rp-0001",
+  "country": "DE",
+  "registry_uri": "https://registrar.example.org",
+  "entitlements": [
+    "https://uri.etsi.org/19475/Entitlement/Service_Provider"
+  ],
+  "privacy_policy": "https://rp.example.org/privacy",
+  "iat": 1793232000,
+  "purpose": [
+    {
+      "lang": "en-US",
+      "value": "Age verification for onboarding (synthetic test data)"
+    }
+  ],
+  "intended_use_id": "age-check",
+  "credentials": [
+    {
+      "format": "dc+sd-jwt",
+      "meta": {
+        "vct_values": [
+          "https://example.org/credentials/age-attestation"
+        ]
+      },
+      "claim": [
+        {
+          "path": [
+            "age_over_18"
+          ]
+        }
+      ]
+    },
+    {
+      "format": "mso_mdoc",
+      "meta": {
+        "doctype_value": "org.iso.18013.5.1.mDL"
+      },
+      "claim": [
+        {
+          "path": [
+            "org.iso.18013.5.1",
+            "age_over_18"
+          ]
+        }
+      ]
+    }
+  ]
+}

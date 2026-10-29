@@ -11,7 +11,7 @@
 | [EU 2025/848](https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX%3A32025R0848) | Amended (per kit) | No | Legal context of relying-party registration |
 | [EU 2026/1730](https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=OJ%3AL_202601730) | Published 2026-07-22 (per kit) | No | Updated certificate and intended-use requirements |
 | [EU 2024/2982 consolidated](https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX%3A02024R2982-20260811) | Consolidated 2026-08-11 (per kit) | No | Wallet-side checks and user warning policy; NOT proof our RP tool is compliant |
-| [ETSI TS 119 475](https://www.etsi.org/deliver/etsi_ts/119400_119499/119475/01.01.01_60/ts_119475v010101p.pdf) | v1.1.1, 2025-10 (per kit) | No | Future registration-certificate adapter requirements |
+| [ETSI TS 119 475](https://www.etsi.org/deliver/etsi_ts/119400_119499/119475/01.02.01_60/ts_119475v010201p.pdf) | **V1.2.1, 2026-03** (latest on the ETSI server, 2026-10-29) | **Yes**: §5.2.1–§5.2.4 (Tables 5, 7–10), Annex B.2.7–B.2.10, Annex C read; SHA-256 in ADR-002 | Registration certificates as an alternative declaration (WRPG-CRT-01/02) |
 
 No v0.1 rule depends on an unverified source.
 
@@ -22,4 +22,5 @@ No v0.1 rule depends on an unverified source.
 - Unknown properties MUST be ignored by implementations (§6). **Implemented:** not malformed, but `indeterminate` (WRPG-EXT-01).
 - TS5 has `serviceIdentifier` (optional, §2.4.1) and `intendedUseIdentifier` (§2.4.4). **Implemented:** both kept as `serviceId` / `intendedUseId`; WRPGuard requires a `serviceId` label even when TS5 omits it.
 - TS5 registration `Credential` includes format, meta and claim paths; expected `values` are not registered (§2.4.2 note). **Implemented:** `values` never affect the decision and are never echoed (WRPG-VAL-01).
+- A TS 119 475 registration certificate's `credentials` reuse the DCQL credential query shape (format, meta, `claim` with `path`), and the certificate is sent in the request's `verifier_info` (TS 119 472-2 RO-13 to RO-16). **Implemented:** decoded (not verified) and mapped to the internal scope model; an entry without `claim` declares no claims; unknown fields rejected (WRPG-CRT-01). Context optional, `intended_use_id` checked when given (WRPG-CRT-02).
 - Registration does not inherently prove legal permission. **Implemented:** every report carries `scopeTrust: caller-supplied-unverified` and a fixed notice.

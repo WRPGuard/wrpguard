@@ -4,6 +4,7 @@
  * Superset strategy (ADR-002): every listed credential query and every listed claims query is
  * evaluated, regardless of `credential_sets` / `claim_sets`, so no requestable branch is skipped.
  */
+import { decodeRegistrationCertificate, parseRegistrationCertificate } from './certificate.js';
 import { parseJsonStrict, snapshotValue, type JsonError, type JsonValue } from './json.js';
 import { resolveLimits, type Limits } from './limits.js';
 import { buildScopeIndex, lookupCredential, matchPath } from './match.js';
@@ -18,6 +19,7 @@ import {
   type EvaluateInput,
   type EvaluateJsonInput,
   type EvaluateOptions,
+  type EvaluateRegistrationCertificateInput,
   type EvaluationResult,
   type Finding,
   type InputIssue,
@@ -53,6 +55,33 @@ export function evaluateDcqlScopeFromJson(input: EvaluateJsonInput, options?: Ev
   return evaluateValues(scope, dcqlQuery, context, issues, limits);
 }
 
+/**
+ * Evaluates a DCQL query against an ETSI TS 119 475 registration certificate (compact JWT or its
+ * JSON payload) instead of a wrpguard.scope/1 file. The certificate is NOT verified (ADR-002
+ * WRPG-CRT-01). It covers one intended use, so the context is optional (WRPG-CRT-02).
+ */
+export function evaluateDcqlRegistrationCertificate(
+  input: EvaluateRegistrationCertificateInput,
+  options?: EvaluateOptions,
+): EvaluationResult {
+  if (typeof input !== 'object' || input === null) {
+    throw new TypeError('evaluateDcqlRegistrationCertificate expects an input object');
+  }
+  if (typeof input.registrationCertificate !== 'string' || typeof input.dcqlQueryJson !== 'string') {
+    throw new TypeError('registrationCertificate and dcqlQueryJson must be strings');
+  }
+  const limits = resolveLimits(options?.limits);
+  const issues: InputIssue[] = [];
+  const certificate = decodeRegistrationCertificate(input.registrationCertificate, limits);
+  issues.push(...certificate.issues);
+  const dcqlQuery = fromParse(parseJsonStrict(input.dcqlQueryJson, limits), 'dcqlQuery', issues);
+  const context = fromSnapshot(snapshotValue(input.context ?? {}, limits), 'context', issues);
+  return evaluateValues(certificate.payload, dcqlQuery, context, issues, limits, 'registrationCertificate');
+}
+
+/** Which kind of declaration the scope input is; it selects the parser and the context rules. */
+type DeclarationKind = 'scope' | 'registrationCertificate';
+
 const MALFORMED_CODE = {
   scope: 'MALFORMED_SCOPE',
   dcqlQuery: 'MALFORMED_DCQL',
@@ -86,10 +115,20 @@ function evaluateValues(
   contextValue: JsonValue | undefined,
   issues: InputIssue[],
   limits: Limits,
+  kind: DeclarationKind = 'scope',
 ): EvaluationResult {
-  const scope = scopeValue === undefined ? undefined : collect(parseScope(scopeValue, limits), issues);
+  const parseDeclaration = kind === 'scope' ? parseScope : parseRegistrationCertificate;
+  const scope = scopeValue === undefined ? undefined : collect(parseDeclaration(scopeValue, limits), issues);
   const dcql = dcqlValue === undefined ? undefined : collect(parseDcqlQuery(dcqlValue, limits), issues);
   const context = contextValue === undefined ? undefined : collect(parseContext(contextValue), issues);
+  if (kind === 'registrationCertificate' && context?.serviceId !== undefined) {
+    issues.push({
+      code: 'MALFORMED_CONTEXT',
+      source: 'context',
+      pointer: '/serviceId',
+      message: 'A registration certificate has no service identifier (ETSI TS 119 475), so serviceId cannot be checked; omit it (WRPG-CRT-02).',
+    });
+  }
 
   if (issues.length > 0 || scope === undefined || dcql === undefined || context === undefined) {
     const sorted = [...issues].sort(compareIssues);
@@ -105,7 +144,8 @@ function evaluateValues(
     };
   }
 
-  const findings = [...contextFindings(scope, context), ...queryFindings(scope, dcql)].sort(compareFindings);
+  const bindingFindings = kind === 'scope' ? contextFindings(scope, context) : certificateContextFindings(scope, context);
+  const findings = [...bindingFindings, ...queryFindings(scope, dcql)].sort(compareFindings);
   return {
     ok: true,
     report: {
@@ -185,6 +225,34 @@ function contextFindings(scope: ScopeNode, context: ContextNode): Finding[] {
   return findings;
 }
 
+/**
+ * WRPG-CRT-02: the certificate travels with the request and covers one intended use, so it binds
+ * the request by itself. A supplied intendedUseId is checked against `intended_use_id`.
+ */
+function certificateContextFindings(scope: ScopeNode, context: ContextNode): Finding[] {
+  const selected = context.intendedUseId;
+  if (selected === undefined || selected === scope.intendedUseId) return [];
+  const base = { ruleId: 'WRPG-CRT-02', source: 'context' as const, pointer: '/intendedUseId' };
+  if (scope.intendedUseId === '') {
+    return [
+      {
+        ...base,
+        code: 'MISSING_CONTEXT',
+        effect: 'indeterminate',
+        message: `The registration certificate has no intended_use_id, so the selected intended use ${quote(selected)} cannot be confirmed.`,
+      },
+    ];
+  }
+  return [
+    {
+      ...base,
+      code: 'WRONG_INTENDED_USE',
+      effect: 'fail',
+      message: `Selected intendedUseId ${quote(selected)} does not match the registration certificate's intended_use_id ${quote(scope.intendedUseId)}.`,
+    },
+  ];
+}
+
 function queryFindings(scope: ScopeNode, dcql: DcqlQueryNode): Finding[] {
   const findings: Finding[] = [];
   const index = buildScopeIndex(scope);
@@ -254,7 +322,9 @@ function queryFindings(scope: ScopeNode, dcql: DcqlQueryNode): Finding[] {
           const reason =
             match === 'parent-of-registered'
               ? ' The requested path is a parent of a registered path; requesting a parent discloses all of its descendants.'
-              : '';
+              : registered.paths.size === 0
+                ? ' No claim paths are declared for this type.'
+                : '';
           findings.push({
             ...base,
             code: 'UNREGISTERED_CLAIM_PATH',

@@ -17,6 +17,10 @@ npx -y @wrpguard/cli check --scope fixtures/scope.json --request fixtures/reques
 npx -y @wrpguard/cli check --scope fixtures/scope.json --request fixtures/request-indeterminate.json \
   --service onboarding --intended-use age-check --json     # exit 3  indeterminate: no claims list
 ```
+With a registration certificate instead of a scope file (no `--service`; `--intended-use` is optional):
+```sh
+npx -y @wrpguard/cli check --registration-cert fixtures/registration-cert.jwt --request fixtures/request-overask.json   # exit 2
+```
 More cases: [`examples/README.md`](examples/README.md). CLI reference: [`docs/CLI.md`](docs/CLI.md).
 
 | Exit | Result |
@@ -48,6 +52,7 @@ else if (result.report.decision !== 'pass') console.error(result.report.findings
 - JSON Schemas for the scope declaration and the report ship in the package: `@wrpguard/core/schemas/scope-1.schema.json`, `@wrpguard/core/schemas/report-1.schema.json`.
 
 ## What is checked (policy 0.1)
+- The declaration is a `wrpguard.scope/1` file, or an **ETSI TS 119 475 registration certificate** (compact JWT, the base64url form carried in `verifier_info`, or the decoded payload; `--registration-cert`). Certificates are decoded, not verified.
 - Formats `dc+sd-jwt` (`meta.vct_values`; **every** listed vct must be declared) and `mso_mdoc` (`meta.doctype_value`). Other formats → `indeterminate`.
 - Claim paths are compared by **exact** element-wise equality. A declared `["address","street"]` does not cover a requested `["address"]`, and `null` (all array elements) only matches `null`.
 - `claim_sets` and `credential_sets`: every listed alternative is evaluated, including optional and least-preferred ones.
@@ -63,7 +68,8 @@ Each rule is traced to an OpenID4VP clause or marked as WRPGuard policy in [ADR-
 - Exact paths only: a narrower child request under a declared parent is reported as `fail`.
 - No Unicode normalization (differently encoded identifiers do not match; fails closed).
 - Only the bare DCQL object is evaluated, not the surrounding Authorization Request.
-- The `wrpguard.scope/1` format is WRPGuard's own schema, informed by EUDI TS5; it is not an official EUDI format, and WRPGuard does not parse TS5 registration data.
+- The `wrpguard.scope/1` format is WRPGuard's own schema, informed by EUDI TS5; it is not an official EUDI format.
+- Registration certificates: signature, chain, status and expiry are not checked; CWT certificates are not supported; an entry without `claim` is read as declaring no claims.
 
 ## License
 WRPGuard is **source-available, not open source**. Copyright 2026 Vynx Labs LLC, licensed under the [PolyForm Noncommercial License 1.0.0](LICENSE.md).

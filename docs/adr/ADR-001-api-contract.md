@@ -1,6 +1,7 @@
 # ADR-001 — Public API, report contract, reason codes, CLI exit codes
 
 - **Status:** Accepted by lead, **frozen for v0.1**. Owner review requested. Any change to a frozen item requires a revision of this ADR.
+- **Revision 1 (2026-10-29):** adds `evaluateDcqlRegistrationCertificate` and the CLI option `--registration-cert`: an ETSI TS 119 475 registration certificate can replace the scope file (ADR-002 WRPG-CRT-01/02). Existing functions, the report format, reason codes and exit codes are unchanged.
 - **Date:** 2026-10-28
 - **Related:** ADR-002 (standards traceability), ADR-003 (input security)
 
@@ -22,12 +23,18 @@ ESM only, Node.js `>=22`, TypeScript `strict`. Packages are published only by th
 evaluateDcqlScope(input: EvaluateInput, options?: EvaluateOptions): EvaluationResult
 evaluateDcqlScopeFromJson(input: EvaluateJsonInput, options?: EvaluateOptions): EvaluationResult
 parseJsonStrict(text: string, limits?: Partial<Limits>): JsonParseResult
+evaluateDcqlRegistrationCertificate(input: EvaluateRegistrationCertificateInput, options?: EvaluateOptions): EvaluationResult   // rev. 1
 ```
 ```ts
 interface EvaluateInput     { scope: unknown; dcqlQuery: unknown; context: EvaluationContext }
 interface EvaluateJsonInput { scopeJson: string; dcqlQueryJson: string; context: EvaluationContext }
 interface EvaluationContext { serviceId?: string; intendedUseId?: string }
 interface EvaluateOptions   { limits?: Partial<Limits> }
+interface EvaluateRegistrationCertificateInput {   // rev. 1
+  registrationCertificate: string;  // compact JWT, base64url-wrapped JWT (verifier_info), or decoded JSON payload
+  dcqlQueryJson: string;
+  context?: EvaluationContext;      // intendedUseId optional and checked; serviceId rejected
+}
 
 type EvaluationResult =
   | { ok: true;  report: EvaluationReport }
@@ -108,6 +115,7 @@ Input error codes: `MALFORMED_DCQL`, `MALFORMED_SCOPE`, `MALFORMED_CONTEXT`, `IN
 ### 8. CLI (frozen)
 ```
 wrpguard check --scope <file> --request <file> [--service <id>] [--intended-use <id>] [--json]
+wrpguard check --registration-cert <file> --request <file> [--intended-use <id>] [--json]   (rev. 1)
 wrpguard --help | --version
 ```
 | Exit | Meaning |

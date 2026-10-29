@@ -22,12 +22,18 @@ const cases = [
   ['request-credential-sets-unsupported.json', context, 3],
   ['request-pass.json', [], 3],
   ['request-malformed-path.json', context, 1],
+  // Registration certificates (ETSI TS 119 475): no --service; --intended-use is optional.
+  ['request-pass.json', [], 0, 'registration-cert.jwt'],
+  ['request-pass.json', ['--intended-use', 'age-check'], 0, 'registration-cert.json'],
+  ['request-overask.json', [], 2, 'registration-cert.jwt'],
+  ['request-indeterminate.json', [], 3, 'registration-cert.jwt'],
 ];
 
 let failures = 0;
-for (const [request, extra, expected] of cases) {
+for (const [request, extra, expected, certificate] of cases) {
   for (const json of [false, true]) {
-    const args = [bin, 'check', '--scope', 'fixtures/scope.json', '--request', `fixtures/${request}`, ...extra];
+    const declaration = certificate === undefined ? ['--scope', 'fixtures/scope.json'] : ['--registration-cert', `fixtures/${certificate}`];
+    const args = [bin, 'check', ...declaration, '--request', `fixtures/${request}`, ...extra];
     if (json) args.push('--json');
     const result = spawnSync(process.execPath, args, { cwd: root, encoding: 'utf8' });
     let note = '';
@@ -42,7 +48,7 @@ for (const [request, extra, expected] of cases) {
     }
     const ok = result.status === expected;
     if (!ok) failures++;
-    console.log(`${ok ? 'ok  ' : 'FAIL'} exit=${String(result.status)} expected=${String(expected)} ${json ? '--json ' : '       '}${request} ${extra.length ? '(context)' : '(no context)'} ${note}`);
+    console.log(`${ok ? 'ok  ' : 'FAIL'} exit=${String(result.status)} expected=${String(expected)} ${json ? '--json ' : '       '}${certificate === undefined ? '' : `${certificate} + `}${request} ${extra.length ? '(context)' : '(no context)'} ${note}`);
   }
 }
 

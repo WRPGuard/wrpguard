@@ -38,6 +38,20 @@ Same evaluation for values you already have in memory (`scope` and `dcqlQuery` a
 
 Both functions return a result and never throw for bad data. They throw `TypeError` only for caller programming errors, such as an invalid `options.limits` value.
 
+### `evaluateDcqlRegistrationCertificate(input, options?)`
+`(input: EvaluateRegistrationCertificateInput, options?: EvaluateOptions) => EvaluationResult`
+
+Evaluates the query against an ETSI TS 119 475 registration certificate instead of a scope file. `registrationCertificate` is the compact JWT (`typ` `rc-wrp+jwt`), the base64url-wrapped JWT from a request's `verifier_info` `registration_cert` element (ETSI TS 119 472-2 RO-16), or the decoded JSON payload. The certificate is **decoded, not verified**: no signature, chain, status or expiry check. Rules, including how an entry without `claim` is read: [CLI reference](CLI.md#registration-certificate---registration-cert) and ADR-002 WRPG-CRT-01/02.
+
+```ts
+const result = evaluateDcqlRegistrationCertificate({
+  registrationCertificate, // string
+  dcqlQueryJson,           // string
+  context: { intendedUseId: 'age-check' }, // optional; serviceId is rejected
+});
+```
+The report has the same shape; its `subject` is `{ relyingPartyId: sub, serviceId: '', intendedUseId: intended_use_id ?? '' }`.
+
 ### `parseJsonStrict(text, limits?)`
 `(text: string, limits?: Partial<Limits>) => JsonParseResult`
 
@@ -54,6 +68,7 @@ Make untrusted strings safe to print to a terminal or log. `escapeControlCharact
 | `EvaluateJsonInput` | `{ scopeJson: string; dcqlQueryJson: string; context: EvaluationContext }` |
 | `EvaluateInput` | `{ scope: unknown; dcqlQuery: unknown; context: EvaluationContext }` |
 | `EvaluationContext` | `{ serviceId?: string; intendedUseId?: string }`: the service and intended use you are about to send the request for. Missing either gives `indeterminate` (`MISSING_CONTEXT`). |
+| `EvaluateRegistrationCertificateInput` | `{ registrationCertificate: string; dcqlQueryJson: string; context?: EvaluationContext }` |
 | `EvaluateOptions` | `{ limits?: Partial<Limits> }` |
 
 - **`dcqlQuery`**: the bare DCQL object (the `dcql_query` value), not the whole Authorization Request. Supported formats (`SUPPORTED_FORMATS`, type `SupportedFormat`): `dc+sd-jwt` with `meta.vct_values`, and `mso_mdoc` with `meta.doctype_value`.

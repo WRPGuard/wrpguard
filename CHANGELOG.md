@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.0-rc.2 (unreleased)
+- **Registration certificates.** `evaluateDcqlRegistrationCertificate` and `wrpguard check --registration-cert` accept an ETSI TS 119 475 V1.2.1 wallet-relying party registration certificate as the declaration: the compact JWT (`rc-wrp+jwt`), the base64url form carried in a request's `verifier_info` (ETSI TS 119 472-2 RO-16), or the decoded payload. The certificate is decoded, **not verified** (signature, chain, status and expiry are not checked); CWT certificates are not supported. Rules WRPG-CRT-01/02 (ADR-002 revision 2); an entry without `claim` declares no claims, and unknown fields in credentials entries are rejected.
+- An unregistered claim of a credential type with no declared claim paths now says so in the finding message.
+- `STANDARDS_SNAPSHOT.registrationModel` names ETSI TS 119 475 V1.2.1.
+- No change for `wrpguard.scope/1` inputs: same policy (`wrpguard.policy/0.1`), report format and exit codes.
+
 ## 0.1.0-rc.1 (2026-10-29)
 No change to evaluation semantics (`wrpguard.policy/0.1`), the report format (`wrpguard.report/1`) or the CLI.
 

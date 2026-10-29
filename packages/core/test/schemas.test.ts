@@ -16,6 +16,7 @@ import {
   SCOPE_SCHEMA_VERSION,
   SUPPORTED_FORMATS,
   evaluateDcqlScope,
+  evaluateDcqlRegistrationCertificate,
   evaluateDcqlScopeFromJson,
   type EvaluationContext,
   type EvaluationResult,
@@ -186,6 +187,16 @@ describe('report-1 schema matches every report the library produces', () => {
       expect(result.ok).toBe(false);
       expectValidReport(result);
     }
+  });
+
+  it.each(['registration-cert.json', 'registration-cert.jwt'])('reports from the registration certificate %s', (certFile) => {
+    const registrationCertificate = fixtureText(certFile);
+    for (const file of REQUEST_FIXTURES) {
+      for (const context of [{}, { intendedUseId: 'age-check' }, { intendedUseId: 'other' }, { serviceId: 'onboarding' }]) {
+        expectValidReport(evaluateDcqlRegistrationCertificate({ registrationCertificate, dcqlQueryJson: fixtureText(file), context }));
+      }
+    }
+    expectValidReport(evaluateDcqlRegistrationCertificate({ registrationCertificate: 'not a certificate', dcqlQueryJson: '{}' }));
   });
 
   it('a truncated findings list', () => {

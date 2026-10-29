@@ -4,6 +4,8 @@
 - **Date:** 2026-10-28
 - **Revision 1 (2026-10-28):** changes after the independent adversarial review (`docs/SECURITY_REVIEW.md`): integral-number lexeme rule (F1), `toJSON` detection (F2), tighter default limits and message truncation (F3), wider display-escape set (F4), non-blocking file open (FIFO), `--help`/`--version` as sole argument (F5). Marked *(rev. 1)* below.
 
+- **Revision 2 (2026-10-29):** registration certificate decoding (§1a).
+
 ## Decisions
 
 ### 1. Own strict JSON parser; never `JSON.parse` on untrusted documents
@@ -16,6 +18,12 @@
 - accepts one leading UTF-8 BOM (common on Windows editors); any other leading/trailing non-whitespace is an error.
 
 Single string tokens are decoded with `JSON.parse` on the already-validated token only; numbers with `Number()` on a grammar-validated lexeme. This reuses the engine's well-tested escape/number semantics without trusting it for structure.
+
+### 1a. Registration certificate decoding *(rev. 2)*
+- The whole certificate text is bounded by `maxInputBytes` before decoding.
+- Compact JWT: exactly three non-empty segments; strict unpadded base64url (RFC 7515 §2) with canonical trailing bits; UTF-8 validated (`decodeURIComponent` rejects invalid sequences); header and payload each parsed by the strict parser (§1) with the same limits, so duplicate keys and number spellings are rejected inside the JWT too. `typ` must be `rc-wrp+jwt` (case-insensitive).
+- A single base64url value is unwrapped once (the `verifier_info` form, TS 119 472-2 RO-16) and must then be a compact JWT.
+- No signature verification and no cryptography in the core (§6). Decoding is not verification; reports keep `scopeTrust: caller-supplied-unverified`.
 
 ### 2. Snapshot of pre-parsed SDK values
 `evaluateDcqlScope` accepts `unknown`. Before validation, values are copied (iteratively, with the same caps) into fresh null-prototype data:

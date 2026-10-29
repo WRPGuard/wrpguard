@@ -16,6 +16,13 @@ $WRPG --request fixtures/request-unsupported-format.json        # 3  indetermina
 $WRPG --request fixtures/request-credential-sets-unsupported.json  # 3  indeterminate: an alternative uses ldp_vc
 $WRPG --request fixtures/request-malformed-path.json            # 1  invalid input: negative path index
 ```
+The same declaration as a registration certificate (ETSI TS 119 475; signature not verified, no `--service`):
+
+```sh
+node packages/cli/dist/bin.js check --registration-cert fixtures/registration-cert.jwt --request fixtures/request-pass.json      # 0  pass
+node packages/cli/dist/bin.js check --registration-cert fixtures/registration-cert.jwt --request fixtures/request-overask.json   # 2  fail
+```
+
 Add `--json` to any command for the machine-readable report. Dropping `--service`/`--intended-use` turns the first command into exit 3 (`MISSING_CONTEXT`).
 
 `pnpm smoke` runs this table against the compiled binary and checks every exit code.

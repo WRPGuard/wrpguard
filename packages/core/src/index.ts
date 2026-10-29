@@ -5,7 +5,7 @@
  * declaration. `pass` is not proof of authorization, registration authenticity, certificate
  * validity, consent, or conformance. See ADR-001 for the frozen contract.
  */
-export { evaluateDcqlScope, evaluateDcqlScopeFromJson } from './evaluate.js';
+export { evaluateDcqlRegistrationCertificate, evaluateDcqlScope, evaluateDcqlScopeFromJson } from './evaluate.js';
 export { parseJsonStrict } from './json.js';
 export type { JsonArray, JsonError, JsonErrorCode, JsonObject, JsonParseResult, JsonValue } from './json.js';
 export { DEFAULT_LIMITS } from './limits.js';
@@ -28,6 +28,7 @@ export type {
   EvaluateInput,
   EvaluateJsonInput,
   EvaluateOptions,
+  EvaluateRegistrationCertificateInput,
   EvaluationContext,
   EvaluationReport,
   EvaluationResult,

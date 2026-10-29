@@ -6,6 +6,7 @@ All expectations assume `--service onboarding --intended-use age-check` (without
 | File | Expected | Reason code |
 |---|---|---|
 | `scope.json` | — | **unverified local synthetic declaration**, not a signed trusted registration |
+| `registration-cert.json`, `registration-cert.jwt` | — | the same declaration as a synthetic ETSI TS 119 475 registration certificate: decoded payload and compact JWT. The JWT signature segment is a placeholder; WRPGuard never verifies it. Use with `--registration-cert` and no `--service`; `--intended-use` is optional. |
 | `request-pass.json` | `pass` (exit 0) | declared scope matches only |
 | `request-mdoc-pass.json` | `pass` (exit 0) | mdoc `[namespace, element]` declared |
 | `request-overask.json` | `fail` (exit 2) | `UNREGISTERED_CLAIM_PATH` for `birth_date` |
