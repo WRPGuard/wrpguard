@@ -1,7 +1,8 @@
-# Manual release: checks, packs and verifies @wrpguard/core and @wrpguard/cli, then stages them
-# on npm with provenance (`npm stage publish`); a maintainer approves each staged package with
-# 2FA before it goes live. Starts only by hand (Actions tab or `gh workflow run`), and is a dry
-# run unless dry_run is set to false. See docs/RELEASING.md.
+# Manual release: checks, packs and verifies @wrpguard/core and @wrpguard/cli, then publishes them
+# to npm with provenance through trusted publishing (OIDC, no token, no 2FA prompt). With
+# stage=true it uses `npm stage publish` instead, and a maintainer approves each package with 2FA.
+# Starts only by hand (Actions tab or `gh workflow run`), and is a dry run unless dry_run is set
+# to false. See docs/RELEASING.md.
 name: release
 
 on:
@@ -11,6 +12,10 @@ on:
         description: Dry run (check, pack and verify; do not publish)
         type: boolean
         default: true
+      stage:
+        description: Stage instead of publishing (approve each package with 2FA on npmjs.com)
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -44,19 +49,25 @@ jobs:
             release/*.cdx.json
             release/SHA256SUMS
           if-no-files-found: error
-      - name: Stage on npm (a maintainer approves with 2FA)
+      - name: Publish to npm
         env:
           DRY_RUN: ${{ inputs.dry_run }}
-          # A granular token without 2FA bypass can stage; with trusted publishing (OIDC)
-          # configured, leave the secret unset.
+          STAGE: ${{ inputs.stage }}
+          # Trusted publishing needs no token. NPM_TOKEN is only a fallback for stage=true and
+          # can be deleted once trusted publishing is configured.
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           set -euo pipefail
           version=$(node -p "require('./packages/core/package.json').version")
+          # A prerelease goes to `next` only once a stable version holds `latest`; until then it
+          # becomes `latest`, so the npm page and a plain `npm i` show the newest release.
+          current=$(npm view @wrpguard/core dist-tags.latest 2>/dev/null || true)
           tag=latest
-          case "$version" in *-*) tag=next ;; esac
+          case "$version" in *-*) case "$current" in '' | *-*) ;; *) tag=next ;; esac ;; esac
           flags=(--access public --provenance --tag "$tag")
           if [ "$DRY_RUN" = "true" ]; then flags+=(--dry-run); fi
+          publish=(npm publish)
+          if [ "$STAGE" = "true" ]; then publish=(npm stage publish); fi
           for name in core cli; do
-            npm stage publish "./release/wrpguard-$name-$version.tgz" "${flags[@]}"
+            "${publish[@]}" "./release/wrpguard-$name-$version.tgz" "${flags[@]}"
           done
