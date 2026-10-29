@@ -77,7 +77,7 @@ This summary is not legal advice and does not change the license; [`LICENSE.md`]
 - Status: experimental release candidate `0.1.0-rc.0`, published on npm with provenance. Changes: [`CHANGELOG.md`](CHANGELOG.md).
 - Security reports: GitHub private vulnerability reporting, see [`SECURITY.md`](SECURITY.md).
 - Contributions: outside pull requests cannot be merged yet, see [`CONTRIBUTING.md`](CONTRIBUTING.md). Code of conduct: [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md).
-- Tests and security review: [`docs/TEST_MATRIX.md`](docs/TEST_MATRIX.md), [`docs/SECURITY_REVIEW.md`](docs/SECURITY_REVIEW.md). Releasing: [`docs/RELEASING.md`](docs/RELEASING.md).
+- Tests and security review: [`docs/TEST_MATRIX.md`](docs/TEST_MATRIX.md), [`docs/SECURITY_REVIEW.md`](docs/SECURITY_REVIEW.md). Independent reviewers: [`docs/REVIEW_GUIDE.md`](docs/REVIEW_GUIDE.md). Releasing: [`docs/RELEASING.md`](docs/RELEASING.md).
 
 ### Development
 Requires Node.js >= 22.12 and pnpm 9. `pnpm install`, then `pnpm check` runs lint, typecheck, tests, build, the CLI and example smoke test, the secret scan and the license check.
