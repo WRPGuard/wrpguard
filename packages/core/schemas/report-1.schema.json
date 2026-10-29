@@ -1,0 +1,132 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/WRPGuard/wrpguard/main/packages/core/schemas/report-1.schema.json",
+  "title": "WRPGuard report (wrpguard.report/1)",
+  "description": "Output of WRPGuard: an evaluation report, or an invalid_input report. This is the JSON printed by `wrpguard check --json`, and the shape of `result.report` / `result.error` in @wrpguard/core. Optional finding fields are omitted when absent.",
+  "oneOf": [{ "$ref": "#/$defs/evaluationReport" }, { "$ref": "#/$defs/inputErrorReport" }],
+  "$defs": {
+    "pointer": {
+      "description": "RFC 6901 JSON Pointer into the input named by source.",
+      "type": "string",
+      "pattern": "^(/.*)?$"
+    },
+    "source": { "enum": ["dcqlQuery", "scope", "context"] },
+    "claimPath": {
+      "type": "array",
+      "items": {
+        "anyOf": [{ "type": "string" }, { "type": "integer", "minimum": 0 }, { "type": "null" }]
+      }
+    },
+    "finding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["code", "effect", "ruleId", "source", "pointer", "message"],
+      "properties": {
+        "code": {
+          "enum": [
+            "WRONG_SERVICE",
+            "WRONG_INTENDED_USE",
+            "MISSING_CONTEXT",
+            "UNSUPPORTED_CREDENTIAL_FORMAT",
+            "UNREGISTERED_CREDENTIAL_TYPE",
+            "UNREGISTERED_CLAIM_PATH",
+            "MISSING_CLAIM_SELECTION",
+            "UNSUPPORTED_DCQL_PROPERTY",
+            "UNRESOLVED_ALTERNATIVES"
+          ]
+        },
+        "effect": { "enum": ["fail", "indeterminate"] },
+        "ruleId": { "type": "string", "pattern": "^WRPG-[A-Z]{3}-[0-9]{2}$" },
+        "source": { "$ref": "#/$defs/source" },
+        "pointer": { "$ref": "#/$defs/pointer" },
+        "message": { "type": "string" },
+        "credentialQueryId": { "type": "string" },
+        "format": { "type": "string" },
+        "credentialType": { "type": "string" },
+        "claimPath": { "$ref": "#/$defs/claimPath" }
+      }
+    },
+    "evaluationReport": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "reportVersion",
+        "decision",
+        "findings",
+        "findingsTruncated",
+        "totalFindings",
+        "subject",
+        "evaluated",
+        "policyVersion",
+        "standardsSnapshot",
+        "scopeTrust",
+        "notice"
+      ],
+      "properties": {
+        "reportVersion": { "const": "wrpguard.report/1" },
+        "decision": { "enum": ["pass", "fail", "indeterminate"] },
+        "findings": { "type": "array", "items": { "$ref": "#/$defs/finding" } },
+        "findingsTruncated": { "type": "boolean" },
+        "totalFindings": { "type": "integer", "minimum": 0 },
+        "subject": {
+          "description": "Identifiers from the scope declaration that was evaluated.",
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["relyingPartyId", "serviceId", "intendedUseId"],
+          "properties": {
+            "relyingPartyId": { "type": "string" },
+            "serviceId": { "type": "string" },
+            "intendedUseId": { "type": "string" }
+          }
+        },
+        "evaluated": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["credentialQueries", "claimQueries"],
+          "properties": {
+            "credentialQueries": { "type": "integer", "minimum": 0 },
+            "claimQueries": { "type": "integer", "minimum": 0 }
+          }
+        },
+        "policyVersion": { "const": "wrpguard.policy/0.1" },
+        "standardsSnapshot": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["dcql", "registrationModel"],
+          "properties": {
+            "dcql": { "type": "string" },
+            "registrationModel": { "type": "string" }
+          }
+        },
+        "scopeTrust": { "const": "caller-supplied-unverified" },
+        "notice": { "type": "string" }
+      }
+    },
+    "inputErrorReport": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["reportVersion", "status", "issues", "issuesTruncated", "policyVersion"],
+      "properties": {
+        "reportVersion": { "const": "wrpguard.report/1" },
+        "status": { "const": "invalid_input" },
+        "issues": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["code", "source", "pointer", "message"],
+            "properties": {
+              "code": { "enum": ["MALFORMED_DCQL", "MALFORMED_SCOPE", "MALFORMED_CONTEXT", "INPUT_TOO_LARGE"] },
+              "source": { "$ref": "#/$defs/source" },
+              "pointer": { "$ref": "#/$defs/pointer" },
+              "message": { "type": "string" }
+            }
+          }
+        },
+        "issuesTruncated": { "type": "boolean" },
+        "policyVersion": { "const": "wrpguard.policy/0.1" }
+      }
+    }
+  }
+}

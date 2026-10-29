@@ -1,0 +1,14 @@
+{
+  "name": "wrpguard-example-basic",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Minimal relying-party integration of @wrpguard/core (synthetic data only).",
+  "license": "PolyForm-Noncommercial-1.0.0",
+  "type": "module",
+  "scripts": {
+    "start": "node preflight.mjs"
+  },
+  "dependencies": {
+    "@wrpguard/core": "workspace:*"
+  }
+}

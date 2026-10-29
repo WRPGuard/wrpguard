@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/WRPGuard/wrpguard/main/packages/core/schemas/scope-1.schema.json",
+  "title": "WRPGuard scope declaration (wrpguard.scope/1)",
+  "description": "A caller-supplied, unverified declaration of what a relying party may request for one service and intended use. WRPGuard's own closed schema, informed by EUDI TS5; not an official EUDI format. The WRPGuard parser additionally enforces rules JSON Schema cannot express: one entry per format + type, integral numbers written as integers (1, not 1.0 or 1e0), no duplicate JSON keys, and configurable resource limits (ADR-003).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "relyingPartyId", "serviceId", "intendedUseId", "credentials"],
+  "properties": {
+    "schemaVersion": { "const": "wrpguard.scope/1" },
+    "relyingPartyId": { "$ref": "#/$defs/identifier" },
+    "serviceId": { "$ref": "#/$defs/identifier", "description": "Must equal the serviceId the caller evaluates for." },
+    "intendedUseId": { "$ref": "#/$defs/identifier", "description": "Must equal the intendedUseId the caller evaluates for." },
+    "credentials": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/credential" }
+    },
+    "snapshot": {
+      "description": "Informational only; never evaluated and not evidence of provenance or freshness.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "observedAt": { "type": "string" },
+        "sourceLabel": { "type": "string" }
+      }
+    }
+  },
+  "$defs": {
+    "identifier": { "type": "string", "minLength": 1 },
+    "credential": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["format", "type", "claims"],
+      "properties": {
+        "format": { "enum": ["dc+sd-jwt", "mso_mdoc"] },
+        "type": {
+          "$ref": "#/$defs/identifier",
+          "description": "The SD-JWT VC vct or the mdoc doctype, compared by exact string equality."
+        },
+        "claims": {
+          "description": "Declared OpenID4VP claims path pointers, matched exactly and element by element.",
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/claimsPath" }
+        }
+      },
+      "if": { "properties": { "format": { "const": "mso_mdoc" } }, "required": ["format"] },
+      "then": { "properties": { "claims": { "type": "array", "items": { "$ref": "#/$defs/mdocPath" } } } }
+    },
+    "claimsPath": {
+      "description": "OpenID4VP 1.0 section 7 claims path pointer. Empty claim names are rejected by WRPGuard policy (WRPG-SYN-02).",
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "anyOf": [
+          { "type": "string", "minLength": 1 },
+          { "type": "null" },
+          { "type": "integer", "minimum": 0, "maximum": 9007199254740991 }
+        ]
+      }
+    },
+    "mdocPath": {
+      "description": "OpenID4VP 1.0 section 7.2: exactly a namespace and a data element identifier.",
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": { "type": "string", "minLength": 1 }
+    }
+  }
+}

@@ -15,7 +15,7 @@ WRPGuard evaluates a proposed OpenID4VP 1.0 DCQL query against a **caller-suppli
 | `@wrpguard/core` | types, strict JSON parser, DCQL/scope/context validation, matcher, report | **none** | **none** (no `node:` imports, no network, filesystem, time, randomness) |
 | `@wrpguard/cli` | `wrpguard` binary: reads local files, prints report | `@wrpguard/core` only | local file read, stdout/stderr |
 
-ESM only, Node.js `>=22`, TypeScript `strict`. Packages are published only by the manual `release` workflow with npm provenance (`docs/RELEASING.md`); `publishConfig.provenance` makes a local `npm publish` fail. Publishing remains an owner decision. License: `PolyForm-Noncommercial-1.0.0` (owner decision 2026-10-28, `docs/LICENSING_DECISION.md`); each package ships `LICENSE.md`.
+ESM only, Node.js `>=22`, TypeScript `strict`. Packages are published only by the manual `release` workflow with npm provenance (`docs/RELEASING.md`); `publishConfig.provenance` makes a local `npm publish` fail. Publishing remains an owner decision. License: `PolyForm-Noncommercial-1.0.0` (owner decision 2026-10-28; `LICENSE.md`); each package ships `LICENSE.md`.
 
 ### 2. Functions (frozen)
 ```ts

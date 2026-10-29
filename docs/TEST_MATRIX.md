@@ -1,6 +1,6 @@
 # T01–T18 verification matrix and false-pass risk report
 
-**Build under test:** v0.1.0-rc.0, the tree of the first commit on `main` (2026-10-28). pnpm 9.15.9, Vitest 5.0.5.
+**Build under test:** v0.1.0-rc.0 (published from commit `d08c5bd`), and `main` for 0.1.0-rc.1 (2026-10-29). pnpm 9.15.9, Vitest 5.0.5. The platform runs below are for v0.1.0-rc.0; 0.1.0-rc.1 was checked on Windows and in GitHub CI.
 - Windows 10, Node.js 24.21.0.
 - Linux (WSL2 Debian, kernel 6.6), official Node.js 22.23.4 and 24.22.2 builds (SHA-256 verified), each from a clean `pnpm install --frozen-lockfile` of the staged tree.
 - GitHub Actions (`ubuntu-latest`): CI run 40799492668 green on Node 22.23.4 and 24.22.1 (226 passed each); release dry run 40803386961 green (npm 11.19.1). macOS is untested.
@@ -32,9 +32,11 @@
 |---|---|
 | `pnpm lint` | exit 0, no problems (probe confirmed the core purity rules fire) |
 | `pnpm typecheck` | exit 0 |
-| `pnpm test` | Windows: 7 files, **225 passed, 1 skipped** (the FIFO test is POSIX-only). Linux, Node 22 and 24: **226 passed**, FIFO test included |
+| `pnpm test` | v0.1.0-rc.0: Windows 7 files, **225 passed, 1 skipped** (the FIFO test is POSIX-only); Linux, Node 22 and 24: **226 passed**, FIFO test included. 0.1.0-rc.1 on Windows: 9 files, **316 passed, 1 skipped** |
+| `schemas.test.ts` (0.1.0-rc.1) | scope schema vs parser: 24 listed cases agree, the documented duplicate format + type exception, 1 000 random scopes (parser accepts => schema accepts; any other difference fails); report schema validates every report for 8 fixtures x 3 contexts, 4 invalid-input reports and a truncated report; schema constants equal the exported versions and code lists |
+| `api-docs.test.ts` (0.1.0-rc.1) | every name exported from `src/index.ts` appears in `docs/API.md` |
 | `pnpm build` | exit 0 (core, cli) |
-| `pnpm smoke` | 19/19 exit codes as documented |
+| `pnpm smoke` | 19/19 exit codes as documented; 0.1.0-rc.1 adds the `examples/basic` output check |
 | `pnpm secret-scan` | no matches (regex scan of the working tree only) |
 | `pnpm license-check` | `PolyForm-Noncommercial-1.0.0` in the root and both packages; a modified package `LICENSE.md` makes it exit 1 |
 | Clean Linux run of the staged tree (`pnpm install --frozen-lockfile` + `pnpm check`) | exit 0 on Node 22.23.4 and 24.22.2 |

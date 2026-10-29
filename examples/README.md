@@ -1,5 +1,7 @@
 # Demo (synthetic data only)
 
+Library integration: [`basic/`](basic/) shows a relying party checking every DCQL query with `@wrpguard/core` before sending it. CLI demo:
+
 From the project root after `pnpm install && pnpm build`:
 
 ```sh

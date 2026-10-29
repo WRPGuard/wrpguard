@@ -49,7 +49,7 @@ Each option may appear once. Without `--service` or `--intended-use` the result 
   "snapshot": { "observedAt": "2026-10-28T00:00:00Z", "sourceLabel": "synthetic-test-only" }
 }
 ```
-Closed schema: unknown properties are rejected. One entry per `format` + `type`; `claims` are exact OpenID4VP claims path pointers (mdoc: exactly `[namespace, element]`). `snapshot` is informational and never evaluated; it is not evidence of provenance or freshness. Mapping from EUDI TS5: ADR-002.
+Closed schema (JSON Schema: `@wrpguard/core/schemas/scope-1.schema.json`): unknown properties are rejected. One entry per `format` + `type`; `claims` are exact OpenID4VP claims path pointers (mdoc: exactly `[namespace, element]`). `snapshot` is informational and never evaluated; it is not evidence of provenance or freshness. Mapping from EUDI TS5: ADR-002.
 
 ## Report (`--json`)
 ```json
@@ -80,4 +80,4 @@ Closed schema: unknown properties are rejected. One entry per `format` + `type`;
   "notice": "pass means only that …"
 }
 ```
-Reason codes, rule IDs and their basis: [ADR-001](adr/ADR-001-api-contract.md) §5 and [ADR-002](adr/ADR-002-standards-traceability.md).
+Reason codes, rule IDs and their basis: [ADR-001](adr/ADR-001-api-contract.md) §5 and [ADR-002](adr/ADR-002-standards-traceability.md). JSON Schemas for the report and the scope declaration: `@wrpguard/core/schemas/report-1.schema.json` and `scope-1.schema.json` (see [API reference](API.md#json-schemas)).

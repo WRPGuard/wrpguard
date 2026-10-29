@@ -71,3 +71,32 @@ jobs:
           for name in core cli; do
             "${publish[@]}" "./release/wrpguard-$name-$version.tgz" "${flags[@]}"
           done
+
+  # After a real (not dry-run, not staged) publish: tag the commit and attach the published
+  # tarballs, SBOM and checksums to a GitHub release. Release notes come from CHANGELOG.md.
+  github-release:
+    needs: release
+    if: ${{ !inputs.dry_run && !inputs.stage }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: release
+          path: release
+      - name: Create tag and GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          version=$(node -p "require('./packages/core/package.json').version")
+          awk -v heading="## $version " 'index($0, heading) == 1 { found = 1; next } /^## / && found { exit } found' CHANGELOG.md > notes.md
+          [ -s notes.md ] || { echo "CHANGELOG.md has no '## $version' section"; exit 1; }
+          prerelease=()
+          case "$version" in *-*) prerelease=(--prerelease) ;; esac
+          gh release create "v$version" release/* --target "$GITHUB_SHA" --title "v$version" --notes-file notes.md "${prerelease[@]}"

@@ -1,6 +1,6 @@
 {
   "name": "@wrpguard/core",
-  "version": "0.1.0-rc.0",
+  "version": "0.1.0-rc.1",
   "description": "Experimental offline preflight: checks whether an OpenID4VP 1.0 DCQL query fits a caller-supplied, unverified scope declaration. Not a certificate validator or EUDI conformance tool.",
   "license": "PolyForm-Noncommercial-1.0.0",
   "author": "Vynx Labs LLC",
@@ -19,12 +19,16 @@
     ".": {
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
-    }
+    },
+    "./schemas/scope-1.schema.json": "./schemas/scope-1.schema.json",
+    "./schemas/report-1.schema.json": "./schemas/report-1.schema.json",
+    "./package.json": "./package.json"
   },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "files": [
     "dist",
+    "schemas",
     "README.md",
     "LICENSE.md"
   ],

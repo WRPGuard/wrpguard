@@ -48,6 +48,13 @@ for (const name of packages) {
   if (!existsSync(join(dir, 'LICENSE.md'))) fail(`@wrpguard/${name} has no LICENSE.md`);
 }
 
+for (const schema of ['scope-1', 'report-1']) {
+  const specifier = `@wrpguard/core/schemas/${schema}.schema.json`;
+  const code = `const s = require(${JSON.stringify(specifier)}); process.exit(typeof s.$id === 'string' ? 0 : 1)`;
+  const { status } = spawnSync(process.execPath, ['-e', code], { cwd: project, stdio: 'ignore' });
+  if (status !== 0) fail(`${specifier} does not resolve to a schema from an installed package`);
+}
+
 const bin = join(project, 'node_modules', '@wrpguard', 'cli', 'dist', 'bin.js');
 const reported = sh(`node "${bin}" --version`).trim();
 if (reported !== version) fail(`installed wrpguard --version prints ${reported}, expected ${version}`);

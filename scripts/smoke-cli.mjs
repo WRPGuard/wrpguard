@@ -51,8 +51,19 @@ const usageOk = usage.status === 1 && usage.stdout === '';
 if (!usageOk) failures++;
 console.log(`${usageOk ? 'ok  ' : 'FAIL'} exit=${String(usage.status)} expected=1 usage error (missing options)`);
 
+// The library example (examples/basic) must keep producing its documented outcomes.
+const example = spawnSync(process.execPath, ['examples/basic/preflight.mjs'], { cwd: root, encoding: 'utf8' });
+const expectedExample = [
+  'age-only: pass -> send',
+  'age-and-birth-date: fail -> blocked (UNREGISTERED_CLAIM_PATH at /credentials/0/claims/1/path)',
+  'no-claims-list: indeterminate -> blocked (MISSING_CLAIM_SELECTION at /credentials/0)',
+];
+const exampleOk = example.status === 0 && example.stdout.trim().split(/\r?\n/).join('\n') === expectedExample.join('\n');
+if (!exampleOk) failures++;
+console.log(`${exampleOk ? 'ok  ' : 'FAIL'} exit=${String(example.status)} expected=0 examples/basic/preflight.mjs output`);
+
 if (failures > 0) {
   console.error(`smoke: ${String(failures)} failure(s)`);
   process.exit(1);
 }
-console.log('smoke: all CLI exit codes as documented');
+console.log('smoke: all CLI exit codes and the library example as documented');

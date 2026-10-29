@@ -16,4 +16,8 @@ Report privately through GitHub's private vulnerability reporting: open the repo
 - Do not open a public issue, discussion or pull request for a suspected vulnerability, and do not publish exploit details before coordinated review.
 - Use synthetic inputs only. Never include real credentials, keys, tokens, registration certificates or personal data in a report.
 
-Supported versions and the disclosure timetable will be set by the maintainers before the first public release.
+## Supported versions
+While WRPGuard is 0.x, only the latest published version receives security fixes.
+
+## After you report
+We aim to acknowledge a report within 5 business days, agree a fix and disclosure date with you, and publish a GitHub security advisory when the fix is released. Please allow up to 90 days before public disclosure. Reporters are credited in the advisory unless they prefer otherwise.
