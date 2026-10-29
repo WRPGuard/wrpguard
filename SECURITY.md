@@ -11,7 +11,7 @@ WRPGuard is **experimental**. It checks only whether a proposed OpenID4VP 1.0 DC
 Documented limitations (see README "Known limitations") are not vulnerabilities, but reports that show their practical impact are welcome.
 
 ## Reporting
-Report privately through GitHub's private vulnerability reporting: open the repository's **Security** tab and choose **Report a vulnerability** (<https://github.com/wrpguard/wrpguard/security/advisories/new>).
+Report privately through GitHub's private vulnerability reporting: open the repository's **Security** tab and choose **Report a vulnerability** (<https://github.com/WRPGuard/wrpguard/security/advisories/new>).
 
 - Do not open a public issue, discussion or pull request for a suspected vulnerability, and do not publish exploit details before coordinated review.
 - Use synthetic inputs only. Never include real credentials, keys, tokens, registration certificates or personal data in a report.

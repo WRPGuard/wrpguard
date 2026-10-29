@@ -4,14 +4,14 @@
   "description": "Experimental local CLI for WRPGuard: offline preflight of an OpenID4VP 1.0 DCQL query against a caller-supplied scope declaration.",
   "license": "PolyForm-Noncommercial-1.0.0",
   "author": "Vynx Labs LLC",
-  "homepage": "https://github.com/wrpguard/wrpguard#readme",
+  "homepage": "https://github.com/WRPGuard/wrpguard#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/wrpguard/wrpguard.git",
+    "url": "git+https://github.com/WRPGuard/wrpguard.git",
     "directory": "packages/cli"
   },
   "bugs": {
-    "url": "https://github.com/wrpguard/wrpguard/issues"
+    "url": "https://github.com/WRPGuard/wrpguard/issues"
   },
   "type": "module",
   "bin": {

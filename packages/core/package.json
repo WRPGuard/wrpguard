@@ -4,14 +4,14 @@
   "description": "Experimental offline preflight: checks whether an OpenID4VP 1.0 DCQL query fits a caller-supplied, unverified scope declaration. Not a certificate validator or EUDI conformance tool.",
   "license": "PolyForm-Noncommercial-1.0.0",
   "author": "Vynx Labs LLC",
-  "homepage": "https://github.com/wrpguard/wrpguard#readme",
+  "homepage": "https://github.com/WRPGuard/wrpguard#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/wrpguard/wrpguard.git",
+    "url": "git+https://github.com/WRPGuard/wrpguard.git",
     "directory": "packages/core"
   },
   "bugs": {
-    "url": "https://github.com/wrpguard/wrpguard/issues"
+    "url": "https://github.com/WRPGuard/wrpguard/issues"
   },
   "type": "module",
   "sideEffects": false,

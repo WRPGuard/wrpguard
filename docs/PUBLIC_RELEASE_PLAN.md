@@ -13,7 +13,7 @@
 
 ## Public launch sequence
 1. **Prepare**: name/trademark check, owner-reviewed docs, secrets audit, IP ownership and dependency-license inventory.
-2. **Owner approves visibility + license**: decided 2026-10-28. License PolyForm Noncommercial 1.0.0 (`LICENSING_DECISION.md`); repository `github.com/wrpguard/wrpguard`, private first, public after owner review.
+2. **Owner approves visibility + license**: decided 2026-10-28. License PolyForm Noncommercial 1.0.0 (`LICENSING_DECISION.md`); repository `github.com/WRPGuard/wrpguard`, private first, public after owner review.
 3. **Publish repository** (human approved) containing truthful experimental status and milestones. A runnable package isn't required for opening the repo, but don't present unfinished APIs as ready.
 4. **Demonstrate core**: synthetic pass/overrequest/indeterminate cases, visible CI and a minimal API tutorial.
 5. **Release experimental npm tag** only after tests, dependency checks, security review, install smoke test, supply-chain provenance and *separate* owner approval.

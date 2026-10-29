@@ -43,7 +43,7 @@ After the fixes, all gates are green again (`pnpm check` exit 0; 225 passed, 1 s
 
 ## Owner decisions (2026-10-28)
 - License: PolyForm Noncommercial 1.0.0; licensor Vynx Labs LLC; commercial licensing via licensing@vynx-labs.dev (`docs/LICENSING_DECISION.md`).
-- Repository: `github.com/wrpguard/wrpguard` in a new `wrpguard` organization, **private first**, public after owner review.
+- Repository: `github.com/WRPGuard/wrpguard` in a new `wrpguard` organization, **private first**, public after owner review.
 - Security reports: GitHub private vulnerability reporting.
 - npm: reserve the `@wrpguard` scope by creating the npm organization `wrpguard`. Publishing remains a separate decision.
 - First local commit approved; no push by the agent.
